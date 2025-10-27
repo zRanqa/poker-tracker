@@ -7,11 +7,19 @@
 
 import SwiftUI
 
+enum AppScreen {
+    case addNightScreen
+    case addPlayerToNightScreen
+}
+
 @main
 struct Poker_TrackerApp: App {
+    
+    @State private var currentScreen: AppScreen = .addNightScreen
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RootView(currentScreen: $currentScreen)
         }
     }
 }
