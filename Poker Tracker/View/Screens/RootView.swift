@@ -24,6 +24,15 @@ struct RootView: View {
                 AddPlayerToNightScreen(
                     onNavigate: { screen in currentScreen = screen }
                 )
+                
+            case .playersScreen:
+                PlayersScreen(
+                    onNavigate: { screen in currentScreen = screen }
+                )
+            case .addPlayerDetailsScreen:
+                AddPlayerDetailsScreen(
+                    onNavigate: { screen in currentScreen = screen }
+                )
             }
         }
     }

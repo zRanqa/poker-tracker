@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct PlayerDetails: Identifiable {
+struct PlayerDetails: Identifiable, Codable {
     var id: UUID = UUID()
     var name: String // MAX 16 CHARACTERS
     

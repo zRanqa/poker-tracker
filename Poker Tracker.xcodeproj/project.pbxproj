@@ -6,6 +6,14 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		9A5987FB2EB0327E006851A2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9A5987FA2EB0327E006851A2 /* GoogleService-Info.plist */; };
+		9A5987FE2EB032EE006851A2 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 9A5987FD2EB032EE006851A2 /* FirebaseAuth */; };
+		9A5988002EB032EE006851A2 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 9A5987FF2EB032EE006851A2 /* FirebaseCore */; };
+		9A5988022EB032EE006851A2 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = 9A5988012EB032EE006851A2 /* FirebaseDatabase */; };
+		9A5988042EB032EE006851A2 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 9A5988032EB032EE006851A2 /* FirebaseFirestore */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		9A7911C12EAF6E5100C0F100 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -24,6 +32,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		9A5987FA2EB0327E006851A2 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		9A7911B32EAF6E5100C0F100 /* Poker Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Poker Tracker.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A7911C02EAF6E5100C0F100 /* Poker TrackerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Poker TrackerTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A7911CA2EAF6E5100C0F100 /* Poker TrackerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Poker TrackerUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -52,6 +61,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9A5988022EB032EE006851A2 /* FirebaseDatabase in Frameworks */,
+				9A5988042EB032EE006851A2 /* FirebaseFirestore in Frameworks */,
+				9A5988002EB032EE006851A2 /* FirebaseCore in Frameworks */,
+				9A5987FE2EB032EE006851A2 /* FirebaseAuth in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -79,6 +92,7 @@
 				9A7911C32EAF6E5100C0F100 /* Poker TrackerTests */,
 				9A7911CD2EAF6E5100C0F100 /* Poker TrackerUITests */,
 				9A7911B42EAF6E5100C0F100 /* Products */,
+				9A5987FA2EB0327E006851A2 /* GoogleService-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -112,6 +126,10 @@
 			);
 			name = "Poker Tracker";
 			packageProductDependencies = (
+				9A5987FD2EB032EE006851A2 /* FirebaseAuth */,
+				9A5987FF2EB032EE006851A2 /* FirebaseCore */,
+				9A5988012EB032EE006851A2 /* FirebaseDatabase */,
+				9A5988032EB032EE006851A2 /* FirebaseFirestore */,
 			);
 			productName = "Poker Tracker";
 			productReference = 9A7911B32EAF6E5100C0F100 /* Poker Tracker.app */;
@@ -195,6 +213,9 @@
 			);
 			mainGroup = 9A7911AA2EAF6E5100C0F100;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				9A5987FC2EB032EE006851A2 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 9A7911B42EAF6E5100C0F100 /* Products */;
 			projectDirPath = "";
@@ -212,6 +233,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9A5987FB2EB0327E006851A2 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -400,6 +422,7 @@
 				DEVELOPMENT_TEAM = Q35Z3NG694;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Poker Tracker";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -428,6 +451,7 @@
 				DEVELOPMENT_TEAM = Q35Z3NG694;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Poker Tracker";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -558,6 +582,40 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		9A5987FC2EB032EE006851A2 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.4.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		9A5987FD2EB032EE006851A2 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9A5987FC2EB032EE006851A2 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		9A5987FF2EB032EE006851A2 /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9A5987FC2EB032EE006851A2 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
+		};
+		9A5988012EB032EE006851A2 /* FirebaseDatabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9A5987FC2EB032EE006851A2 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseDatabase;
+		};
+		9A5988032EB032EE006851A2 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9A5987FC2EB032EE006851A2 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 9A7911AB2EAF6E5100C0F100 /* Project object */;
 }

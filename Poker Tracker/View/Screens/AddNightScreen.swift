@@ -24,6 +24,7 @@ struct AddNightScreen: View {
                 VStack {
                     DatePickerView(selectedDate: $inputDate)
                         .padding(.bottom, 20)
+                        .padding(.top, 5)
                     
                     HStack {
                         Text("Players")

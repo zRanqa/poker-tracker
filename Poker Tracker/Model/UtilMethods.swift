@@ -16,19 +16,24 @@ func validateInput(
     input: String,
     validateInt: Bool = false,
     validateDouble: Bool = false,
+    validateName: Bool = false
 ) -> Status {
     if input == "" {
         return Status(isSuccess: false, message:"All fields required to be filled out")
     }
     
+    if validateName && input.count > 16 {
+        return Status(isSuccess: false, message: "Name cannot be longer than 16 characters")
+    }
+    
     if validateInt {
-        guard let intVar = Int(input) else {
+        guard let _ = Int(input) else {
             return Status(isSuccess: false, message:"Input must be an number")
         }
     }
     
     if validateDouble {
-        guard let intVar = Double(input) else {
+        guard let _ = Double(input) else {
             return Status(isSuccess: false, message:"Input must be an number")
         }
     }

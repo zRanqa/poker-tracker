@@ -24,17 +24,17 @@ struct BottomBar: View {
                 }
                 Spacer()
                 Button(action: {
-//                    onNavigate(.search)
+                    onNavigate(.addNightScreen)
                 }) {
-                    Image(systemName: "magnifyingglass")
-                        .font(.system(size: iconSize))
+                    Image(systemName: "plus.app.fill")
+                        .font(.system(size: 50))
                         .shadow(color: Color.white.opacity(0.8), radius: 4, x: 0, y: 0)
                 }
                 Spacer()
                 Button(action: {
-//                    onNavigate(.myBookings)
+                    onNavigate(.playersScreen)
                 }) {
-                    Image(systemName: "info.circle.text.page")
+                    Image(systemName: "person.circle")
                         .font(.system(size: iconSize))
                         .shadow(color: Color.white.opacity(0.8), radius: 4, x: 0, y: 0)
                 }
