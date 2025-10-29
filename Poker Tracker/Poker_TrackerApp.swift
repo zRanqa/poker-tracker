@@ -12,6 +12,7 @@ enum AppScreen {
     case homeScreen
     case addNightScreen
     case addPlayerToNightScreen
+    case allGamesScreen
     case playersScreen
     case addPlayerDetailsScreen
 }

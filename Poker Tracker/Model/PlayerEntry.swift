@@ -31,6 +31,16 @@ class PlayerEntry: Identifiable {
         self.endingAmount = endingAmount
         self.buyIns = buyIns
     }
+    
+    var toFirebasePlayerEntry: FirebasePlayerEntry {
+        FirebasePlayerEntry(
+            id: id,
+            playerDetails: playerDetails,
+            startingAmount: startingAmount,
+            endingAmount: endingAmount,
+            buyIns: buyIns
+        )
+    }
 }
 
 func getTestPlayerEntry() -> PlayerEntry {

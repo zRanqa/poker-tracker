@@ -22,6 +22,9 @@ struct AddNightScreen: View {
     @State var maxMoney: Double = 0.0
     @State var minMoney: Double = 0.0
     
+    @State var areYouSure: Bool = false
+    @State var buttonText: String = "Add Night"
+    
     var body: some View {
         ZStack {
             Color.black.ignoresSafeArea()
@@ -80,7 +83,7 @@ struct AddNightScreen: View {
                         ErrorMessage(message: errorMessage)
                     }
                     
-                    WideButton(name: "Add Night", color: .green, onTap: addNight)
+                    WideButton(name: buttonText, color: .green, onTap: addNight)
                     
 //                    WideButton(name: "Cancel", color: .red, onTap: {})
                 }
@@ -141,7 +144,20 @@ struct AddNightScreen: View {
             errorMessage = "Money not balanced: \(keyword) $\(abs(totalMoneyInPot))"
             return
         }
-    
+        
+        if !areYouSure {
+            areYouSure = true
+            buttonText = "Are you Sure?"
+        }
+        else {
+            // save
+            let nightEntry = NightEntry(date: inputDate, playerEntries: playerEntries)
+            Task {
+                try await saveNightEntry(nightEntry: nightEntry)
+            }
+            print("Save Night")
+            onNavigate(.allGamesScreen)
+        }
         
     }
     

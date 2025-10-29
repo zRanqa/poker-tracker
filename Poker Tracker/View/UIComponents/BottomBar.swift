@@ -32,9 +32,9 @@ struct BottomBar: View {
                 }
                 Spacer()
                 Button(action: {
-                    onNavigate(.playersScreen)
+                    onNavigate(.allGamesScreen)
                 }) {
-                    Image(systemName: "person.circle")
+                    Image(systemName: "info.circle.text.page")
                         .font(.system(size: iconSize))
                         .shadow(color: Color.white.opacity(0.8), radius: 4, x: 0, y: 0)
                 }

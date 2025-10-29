@@ -52,6 +52,41 @@ func doesPlayerDetailsExist(name: String) async throws -> Bool {
     }
 }
 
+func saveNightEntry(nightEntry: NightEntry) async throws {
+    let db = Firestore.firestore()
+    
+    let firebaseNightEntry: FirebaseNightEntry = nightEntry.toFirebaseNightEntry
+    
+    do {
+        try db.collection("nightEntries")
+            .document(firebaseNightEntry.id.uuidString)
+            .setData(from: firebaseNightEntry) { error in
+                if let error = error {
+                    print("Firestore write error: \(error.localizedDescription)")
+                } else {
+                    print("Booking saved successfully.")
+                }
+            }
+    } catch {
+        print("Encoding error")
+    }
+}
+
+func loadAllNightEntries() async throws -> [NightEntry] {
+    let db = Firestore.firestore()
+    
+    let snapshot = try await db.collection("nightEntries")
+        .getDocuments()
+    
+    let firebaseNightEntries = try snapshot.documents.map { document in
+        try document.data(as: FirebaseNightEntry.self)
+    }
+    
+    let nightEntries: [NightEntry] = firebaseNightEntries.map(\.toNightEntry)
+    
+    return nightEntries
+}
+
 //func saveUserDetails(_ userDetails: UserDetails) async throws {
 //    
 //    let db = Firestore.firestore()

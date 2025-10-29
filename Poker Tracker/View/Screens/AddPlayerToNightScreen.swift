@@ -160,12 +160,12 @@ struct AddPlayerToNightScreen: View {
             return Status(isSuccess: false, message: "Please select a name")
         }
         
-        status = validateInput(input: startingAmount, validateDouble: true)
+        status = validateInput(input: startingAmount, validateDouble: true, validatePositive: true)
         if status.isSuccess == false {
             return status
         }
         
-        status = validateInput(input: endingAmount, validateDouble: true)
+        status = validateInput(input: endingAmount, validateDouble: true, validatePositive: true)
         if status.isSuccess == false {
             return status
         }

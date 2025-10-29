@@ -9,6 +9,9 @@ import SwiftUI
 import SwiftData
 
 struct RootView: View {
+    @Environment(\.modelContext) private var context
+    @Query var playerEntries: [PlayerEntry] = []
+    @Query var savedDates: [SavedDate] = []
     
     @Binding var currentScreen: AppScreen
     
@@ -27,7 +30,10 @@ struct RootView: View {
                 AddPlayerToNightScreen(
                     onNavigate: { screen in currentScreen = screen }
                 )
-                
+            case .allGamesScreen:
+                AllGamesScreen(
+                    onNavigate: { screen in currentScreen = screen }
+                )
             case .playersScreen:
                 PlayersScreen(
                     onNavigate: { screen in currentScreen = screen }
@@ -36,6 +42,14 @@ struct RootView: View {
                 AddPlayerDetailsScreen(
                     onNavigate: { screen in currentScreen = screen }
                 )
+            }
+        }
+        .onAppear() {
+            for player in playerEntries {
+                context.delete(player)
+            }
+            for date in savedDates {
+                context.delete(date)
             }
         }
     }
