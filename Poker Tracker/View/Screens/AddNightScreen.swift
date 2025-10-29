@@ -151,6 +151,8 @@ struct AddNightScreen: View {
         }
         else {
             // save
+            // TODO: GET RID OF ALL THE DATA IN SWIFTDATA
+            // TODO: (DELETE THE CURRENT NIGHT ENTRY)
             let nightEntry = NightEntry(date: inputDate, playerEntries: playerEntries)
             Task {
                 try await saveNightEntry(nightEntry: nightEntry)
