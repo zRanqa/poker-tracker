@@ -14,9 +14,13 @@ private var dateFormatter: DateFormatter {
 }
 
 struct DatePickerView: View {
+    
+    
     @State private var showDatePicker = false
     @Binding var selectedDate: Date
 //    var name: String = "[name]"
+    
+    var onUpdate: () -> Void = {}
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -49,6 +53,7 @@ struct DatePickerView: View {
 
                 Button("Done") {
                     showDatePicker = false
+                    onUpdate()
                 }
                 .padding()
             }

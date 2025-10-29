@@ -6,14 +6,18 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct AddPlayerToNightScreen: View {
+    @Environment(\.modelContext) private var context
+    @Query var playerEntries: [PlayerEntry] = []
     
     var onNavigate: (AppScreen) -> Void
     
-    @State private var selectedName = "Select"
+    @State private var allPlayers: [PlayerDetails] = []
     
-    let options = ["Select", "Jonathan", "Zaki"]
+    @State private var selectedPlayerName: String = "Select"
+    @State private var allPlayersString: [String] = ["Select"]
     
     @State private var startingAmount: String = ""
     @State private var endingAmount: String = ""
@@ -33,9 +37,9 @@ struct AddPlayerToNightScreen: View {
                 HStack {
                     Text("Name: ")
                         .font(.title2)
-                    Picker("Name", selection: $selectedName) {
-                        ForEach(options, id: \.self) { option in
-                            Text(option)
+                    Picker("Name", selection: $selectedPlayerName) {
+                        ForEach(allPlayersString, id: \.self) { player in
+                            Text(player)
                         }
                     }
                     .tint(.orange)
@@ -92,63 +96,67 @@ struct AddPlayerToNightScreen: View {
                     ErrorMessage(message: errorMessage)
                 }
                 
-                
-                VStack(spacing: 20) {
-                    Button(action: {
-//                         Save details
-                        let status = validateInputs()
-                        if status.isSuccess {
-                            
-                            let playerEntry = PlayerEntry(
-                                playerDetails: PlayerDetails(name: selectedName),
-                                startingAmount: Double(startingAmount)!,
-                                endingAmount: Double(endingAmount)!,
-                                buyIns: Int(buyIns)!
-                            )
-                            
-                            onNavigate(.addNightScreen)
-                            
-                        }
-                        else {
-                            errorMessage = status.message
-                        }
-                    }) {
-                        Text("Add Player")
-                            .foregroundColor(.white)
-                            .font(.system(size: 16, weight: .semibold))
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color.green)
-                            .cornerRadius(8)
-                            .shadow(color: Color.white.opacity(0.8), radius: 4, x: 0, y: 0)
-                    }
+                VStack {
                     
-                    Button(action: {
-                        onNavigate(.addNightScreen)
-                    }) {
-                        Text("Cancel")
-                            .foregroundColor(.white)
-                            .font(.system(size: 16, weight: .semibold))
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color.red)
-                            .cornerRadius(8)
-                            .shadow(color: Color.white.opacity(0.8), radius: 4, x: 0, y: 0)
-                    }
+                    WideButton(name: "Add Player", color: .green, onTap: addPlayer)
+                    
+                    WideButton(name: "Cancel", color: .red, onTap: { onNavigate(.addNightScreen) })
+                    
                 }
             }
             .padding(.horizontal, 10)
-            .padding(.bottom, 10)
             
             BottomBar(onNavigate: onNavigate)
         }
         .edgesIgnoringSafeArea(.bottom)
+        .onAppear {
+            Task {
+                do {
+                    let players = try await loadAllPlayerDetails()
+                    
+                    DispatchQueue.main.async {
+                        self.allPlayers = players
+                        for player in allPlayers {
+                            // If the player is already added to the night, dont add them
+                            if playerEntries.contains(where: { $0.playerDetails.name == player.name }) {
+                                continue
+                            }
+                            allPlayersString.append(player.name)
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    func addPlayer() {
+        let status = validateInputs()
+        if status.isSuccess {
+            
+            let playerEntry = PlayerEntry(
+                playerDetails: getPlayerDetailsFromInput(),
+                startingAmount: Double(startingAmount)!,
+                endingAmount: Double(endingAmount)!,
+                buyIns: Int(buyIns)!
+            )
+            
+            onNavigate(.addNightScreen)
+            context.insert(playerEntry)
+            
+        }
+        else {
+            errorMessage = status.message
+        }
+    }
+    
+    func getPlayerDetailsFromInput() -> PlayerDetails {
+        return allPlayers.first { $0.name == selectedPlayerName }!
     }
     
     func validateInputs() -> Status {
         var status: Status
         
-        if selectedName == "Select" {
+        if selectedPlayerName == "Select" {
             return Status(isSuccess: false, message: "Please select a name")
         }
         

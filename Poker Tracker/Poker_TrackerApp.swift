@@ -9,6 +9,7 @@ import SwiftUI
 import FirebaseCore
 
 enum AppScreen {
+    case homeScreen
     case addNightScreen
     case addPlayerToNightScreen
     case playersScreen
@@ -26,7 +27,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 @main
 struct Poker_TrackerApp: App {
     
-    @State private var currentScreen: AppScreen = .addNightScreen
+    @State private var currentScreen: AppScreen = .homeScreen
     
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
         
@@ -34,5 +35,6 @@ struct Poker_TrackerApp: App {
         WindowGroup {
             RootView(currentScreen: $currentScreen)
         }
+        .modelContainer(for: [PlayerEntry.self, SavedDate.self])
     }
 }

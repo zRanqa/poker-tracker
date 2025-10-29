@@ -14,8 +14,11 @@ struct RootView: View {
     
     var body: some View {
         ZStack {
-            /// Switch statement to handle the screen switching
             switch currentScreen {
+            case .homeScreen:
+                HomeScreen(
+                    onNavigate: { screen in currentScreen = screen }
+                )
             case .addNightScreen:
                 AddNightScreen(
                     onNavigate: { screen in currentScreen = screen }

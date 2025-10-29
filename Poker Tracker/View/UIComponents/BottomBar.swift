@@ -16,7 +16,7 @@ struct BottomBar: View {
             HStack {
                 Spacer()
                 Button(action: {
-//                    onNavigate(.home)
+                    onNavigate(.homeScreen)
                 }) {
                     Image(systemName: "house")
                         .font(.system(size: iconSize))

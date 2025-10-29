@@ -30,6 +30,8 @@ struct AddPlayerView: View {
                 }
                 .padding()
                 .background(RoundedRectangle(cornerRadius: 8).stroke(Color.gray))
+                .background(Color.black)
+                .cornerRadius(8)
 //                .background(isValid ? Color.clear : Color(red: 1.0, green: 0.6, blue: 0.6))
             }
         }

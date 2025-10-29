@@ -6,8 +6,10 @@
 //
 
 import Foundation
+import SwiftData
 
-struct PlayerEntry: Identifiable {
+@Model
+class PlayerEntry: Identifiable {
     var id: UUID = UUID()
     var playerDetails: PlayerDetails 
     var startingAmount: Double

@@ -39,6 +39,7 @@ struct PlayersScreen: View {
                 })
                 .padding(.top, 5)
             }
+            .padding(.horizontal, 10)
             
             Spacer()
             
