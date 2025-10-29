@@ -19,6 +19,9 @@ struct AddNightScreen: View {
     @State var inputDate: Date = Date()
     @State var errorMessage: String = ""
     
+    @State var maxMoney: Double = 0.0
+    @State var minMoney: Double = 0.0
+    
     var body: some View {
         ZStack {
             Color.black.ignoresSafeArea()
@@ -47,7 +50,15 @@ struct AddNightScreen: View {
                             
                             VStack {
                                 ForEach (orderPlayerEntries(), id: \.self.id) { playerEntry in
-                                    PlayerEntryView(playerEntry: playerEntry)
+                                    PlayerEntryView(
+                                        playerEntry: playerEntry,
+                                        color: colorForValue(
+                                            value: playerEntry.endingAmount,
+                                            minValue: minMoney,
+                                            maxValue: maxMoney,
+                                            neutral: playerEntry.startingAmount
+                                            )
+                                        )
                                 }
                                 
                                 AddPlayerView(onTap: addPlayer)
@@ -81,12 +92,37 @@ struct AddNightScreen: View {
                 if !savedDates.isEmpty {
                     inputDate = savedDates.first!.date
                 }
+                
+                if !playerEntries.isEmpty {
+                    
+                    minMoney = playerEntries.first!.endingAmount
+                    maxMoney = playerEntries.first!.endingAmount
+                    
+                    for player in playerEntries {
+                        if player.endingAmount > maxMoney {
+                            maxMoney = player.endingAmount
+                        }
+                        if player.endingAmount < minMoney {
+                            minMoney = player.endingAmount
+                        }
+                    }
+                }
             }
         }
         .edgesIgnoringSafeArea(.bottom)
     }
     
     func addNight() {
+        
+        // Validate the night
+        
+        // Check if there are any players
+        if playerEntries.isEmpty {
+            errorMessage = "No players added"
+            return
+        }
+        
+        
         var totalMoneyInPot = 0.0
         
         for player in playerEntries {
@@ -103,7 +139,10 @@ struct AddNightScreen: View {
             }
             
             errorMessage = "Money not balanced: \(keyword) $\(abs(totalMoneyInPot))"
+            return
         }
+    
+        
     }
     
     func orderPlayerEntries() -> [PlayerEntry] {

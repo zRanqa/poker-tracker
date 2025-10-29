@@ -15,12 +15,7 @@ func formatAmount(amount: Double) -> String {
 struct PlayerEntryView: View {
     
     var playerEntry: PlayerEntry
-    
-    
-    @State private var selectedOption = "Option 1"
-    
-    let options = ["Option 1", "Option 2", "Option 3"]
-    
+    var color: Color
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -51,7 +46,7 @@ struct PlayerEntryView: View {
                     Text(formatAmount(amount: playerEntry.endingAmount))
                         .frame(width: 70, alignment: .trailing)
                         .padding(.horizontal, 8)
-                        .foregroundStyle(getEndColor())
+                        .foregroundStyle(color)
                 }
                 
             }
@@ -60,20 +55,13 @@ struct PlayerEntryView: View {
         
         }
     }
-    
-    func getEndColor() -> Color {
-        if playerEntry.endingAmount > playerEntry.startingAmount {
-            return .green
-        }
-        else if playerEntry.endingAmount < playerEntry.startingAmount {
-            return .red
-        }
-        return .white
-    }
-
 }
 
 
 #Preview {
-    PlayerEntryView(playerEntry: getTestPlayerEntry())
+    let testPlayerEntry = getTestPlayerEntry()
+    PlayerEntryView(
+        playerEntry: testPlayerEntry,
+        color: colorForValue(value: testPlayerEntry.endingAmount, minValue: 0, maxValue: 40, neutral: testPlayerEntry.startingAmount)
+    )
 }
