@@ -51,3 +51,26 @@ func getTestPlayerEntry() -> PlayerEntry {
         buyIns: 1
     )
 }
+
+func orderPlayerEntries(playerEntries: [PlayerEntry]) -> [PlayerEntry] {
+    return playerEntries.sorted { $0.endingAmount > $1.endingAmount }
+}
+
+
+func calculateMinMax(playerEntries: [PlayerEntry]) -> (Double, Double) {
+    if playerEntries.isEmpty {
+        return (0,0)
+    }
+    var minMoney = playerEntries.first!.endingAmount
+    var maxMoney = playerEntries.first!.endingAmount
+    
+    for player in playerEntries {
+        if player.endingAmount > maxMoney {
+            maxMoney = player.endingAmount
+        }
+        if player.endingAmount < minMoney {
+            minMoney = player.endingAmount
+        }
+    }
+    return (minMoney, maxMoney)
+}

@@ -22,7 +22,7 @@ struct NightEntry: Identifiable {
         self.date = date
         self.playerEntries = playerEntries
     }
-    
+
     var toFirebaseNightEntry: FirebaseNightEntry {
         FirebaseNightEntry(
             id: id,

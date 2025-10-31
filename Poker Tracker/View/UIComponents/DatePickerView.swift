@@ -7,14 +7,7 @@
 
 import SwiftUI
 
-private var dateFormatter: DateFormatter {
-    let formatter = DateFormatter()
-    formatter.dateStyle = .medium
-    return formatter
-}
-
 struct DatePickerView: View {
-    
     
     @State private var showDatePicker = false
     @Binding var selectedDate: Date
@@ -31,7 +24,7 @@ struct DatePickerView: View {
                 showDatePicker = true
             }) {
                 HStack {
-                    Text(dateFormatter.string(from: selectedDate))
+                    Text(formatDateMedium(date: selectedDate))
                         .foregroundColor(.primary)
                         .font(.subheadline)
                     Spacer()

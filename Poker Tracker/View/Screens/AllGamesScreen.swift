@@ -11,13 +11,24 @@ struct AllGamesScreen: View {
     
     var onNavigate: (AppScreen) -> Void
     
+    @State var nightEntries: [NightEntry] = []
+    
     var body: some View {
         VStack {
             Text("All Games")
                 .font(.title)
                 .padding(.bottom)
             
-            ViewPlayersButton(text: "View Players", onTap: { onNavigate(.playersScreen) })
+            ScrollView {
+                VStack {
+                    
+                    ViewPlayersButton(text: "View Players", onTap: { onNavigate(.playersScreen) })
+                    
+                    ForEach (orderNightEntries(), id: \.self.id) { nightEntry in
+                        NightEntryView(nightEntry: nightEntry)
+                    }
+                }
+            }
             
             Spacer()
             
@@ -28,7 +39,17 @@ struct AllGamesScreen: View {
         }
         .padding(.horizontal, 10)
         .edgesIgnoringSafeArea(.bottom)
+        .onAppear() {
+            Task {
+                nightEntries = try await loadAllNightEntries()
+            }
+        }
     }
+    
+    func orderNightEntries() -> [NightEntry] {
+        return nightEntries.sorted { $0.date > $1.date }
+    }
+        
 }
 
 #Preview {

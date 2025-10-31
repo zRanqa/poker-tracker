@@ -52,7 +52,7 @@ struct AddNightScreen: View {
                         VStack {
                             
                             VStack {
-                                ForEach (orderPlayerEntries(), id: \.self.id) { playerEntry in
+                                ForEach (orderPlayerEntries(playerEntries: playerEntries), id: \.self.id) { playerEntry in
                                     PlayerEntryView(
                                         playerEntry: playerEntry,
                                         color: colorForValue(
@@ -96,20 +96,7 @@ struct AddNightScreen: View {
                     inputDate = savedDates.first!.date
                 }
                 
-                if !playerEntries.isEmpty {
-                    
-                    minMoney = playerEntries.first!.endingAmount
-                    maxMoney = playerEntries.first!.endingAmount
-                    
-                    for player in playerEntries {
-                        if player.endingAmount > maxMoney {
-                            maxMoney = player.endingAmount
-                        }
-                        if player.endingAmount < minMoney {
-                            minMoney = player.endingAmount
-                        }
-                    }
-                }
+                (minMoney, maxMoney) = calculateMinMax(playerEntries: playerEntries)
             }
         }
         .edgesIgnoringSafeArea(.bottom)
@@ -150,21 +137,21 @@ struct AddNightScreen: View {
             buttonText = "Are you Sure?"
         }
         else {
-            // save
-            // TODO: GET RID OF ALL THE DATA IN SWIFTDATA
-            // TODO: (DELETE THE CURRENT NIGHT ENTRY)
             let nightEntry = NightEntry(date: inputDate, playerEntries: playerEntries)
             Task {
                 try await saveNightEntry(nightEntry: nightEntry)
             }
-            print("Save Night")
+            
+            for player in playerEntries {
+                context.delete(player)
+            }
+            for date in savedDates {
+                context.delete(date)
+            }
+            
             onNavigate(.allGamesScreen)
         }
         
-    }
-    
-    func orderPlayerEntries() -> [PlayerEntry] {
-        return playerEntries.sorted { $0.endingAmount > $1.endingAmount }
     }
     
     func addPlayer() {

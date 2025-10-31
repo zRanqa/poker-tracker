@@ -87,6 +87,16 @@ func loadAllNightEntries() async throws -> [NightEntry] {
     return nightEntries
 }
 
+func saveAllNightsFromData() async throws {
+    let db = Firestore.firestore()
+    
+    let nightEntries = await getNightsFromData()
+    
+    for nightEntry in nightEntries {
+        try await saveNightEntry(nightEntry: nightEntry)
+    }
+}
+
 //func saveUserDetails(_ userDetails: UserDetails) async throws {
 //    
 //    let db = Firestore.firestore()
