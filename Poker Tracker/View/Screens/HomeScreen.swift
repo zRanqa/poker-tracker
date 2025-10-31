@@ -48,8 +48,10 @@ struct HomeScreen: View {
                             )
                     }
                     .padding(.horizontal, 20)
+                    .padding(.bottom, 25)
 
                     ShowOtherStats()
+                        .padding(.bottom, 5)
                     
                 }
             }

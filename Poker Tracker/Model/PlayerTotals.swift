@@ -10,6 +10,8 @@ import Foundation
 struct PlayerTotals: Identifiable {
     var id = UUID()
     var playerDetails: PlayerDetails
+    var buyIns: Int = 0
+    
     var totalMoney: Double
     var totalGames: Int = 0
     
@@ -18,6 +20,8 @@ struct PlayerTotals: Identifiable {
     
     var lossStreak: Int = 0
     var stopLossStreak: Bool = true
+    
+    var mostMoneyWon: Double = 0
 }
 
 func calculateTotals() async -> [PlayerTotals] {
@@ -54,6 +58,14 @@ func calculateTotals() async -> [PlayerTotals] {
                     }
                     else {
                         playerTotals[index].stopLossStreak = false
+                    }
+                    
+                    // Buy Ins
+                    playerTotals[index].buyIns += playerEntry.buyIns
+                    
+                    // Most Money
+                    if playerEntry.endingAmount - playerEntry.startingAmount > playerTotals[index].mostMoneyWon {
+                        playerTotals[index].mostMoneyWon = playerEntry.endingAmount - playerEntry.startingAmount
                     }
                 }
             }

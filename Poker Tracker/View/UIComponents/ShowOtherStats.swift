@@ -26,11 +26,11 @@ struct ShowOtherStats: View {
             VStack(spacing: 15) {
                 VStack {
                     HStack {
-                        Text("🔥 Current Longest Winstreak:")
+                        Text("🏆 Current Longest Winstreak:")
                         Spacer()
                     }
                     HStack {
-                        Text("🏆 \(getBiggestWinStreak()?.playerDetails.name ?? "Loading") — \(getBiggestWinStreak()?.winStreak ?? 0)")
+                        Text("🔥 \(getBiggestWinStreak()?.playerDetails.name ?? "Loading") — \(getBiggestWinStreak()?.winStreak ?? 0)")
                         Spacer()
                     }
                 }
@@ -42,7 +42,29 @@ struct ShowOtherStats: View {
                         Spacer()
                     }
                     HStack {
-                        Text("🏆 \(getBiggestLossStreak()?.playerDetails.name ?? "Loading") — \(getBiggestLossStreak()?.lossStreak ?? 0)")
+                        Text("😢 \(getBiggestLossStreak()?.playerDetails.name ?? "Loading") — \(getBiggestLossStreak()?.lossStreak ?? 0)")
+                        Spacer()
+                    }
+                }
+                
+                VStack {
+                    HStack {
+                        Text("🏦 Most Buy-Ins:")
+                        Spacer()
+                    }
+                    HStack {
+                        Text("💸 \(getMostBuyIns()?.playerDetails.name ?? "Loading") — \(getMostBuyIns()?.buyIns ?? 0)")
+                        Spacer()
+                    }
+                }
+                
+                VStack {
+                    HStack {
+                        Text("💰 Most Money Won In A Night:")
+                        Spacer()
+                    }
+                    HStack {
+                        Text("🤑 \(getMostMoney()?.playerDetails.name ?? "Loading") — \(formatAmount(amount: getMostMoney()?.mostMoneyWon ?? 0))")
                         Spacer()
                     }
                 }
@@ -76,6 +98,14 @@ struct ShowOtherStats: View {
     
     private func getBiggestLossStreak() -> PlayerTotals? {
         return playerTotals.sorted(by: { $0.lossStreak > $1.lossStreak }).first
+    }
+    
+    private func getMostBuyIns() -> PlayerTotals? {
+        return playerTotals.sorted(by: { $0.buyIns > $1.buyIns }).first
+    }
+    
+    private func getMostMoney() -> PlayerTotals? {
+        return playerTotals.sorted(by: { $0.mostMoneyWon > $1.mostMoneyWon }).first
     }
     
 }
