@@ -10,6 +10,7 @@ import Charts
 
 struct TotalEarningsChart: View {
     var fullscreen: Bool
+    var onTap: () -> Void
     
     @State var playerTotals: [PlayerTotals] = []
     @State var showedTotals: [PlayerTotals] = []
@@ -18,8 +19,9 @@ struct TotalEarningsChart: View {
     
     private var barWidth: CGFloat = 60
     
-    init(fullscreen: Bool = false) {
+    init(fullscreen: Bool = false, onTap: @escaping () -> Void = {}) {
         self.fullscreen = fullscreen
+        self.onTap = onTap
     }
     
     var body: some View {
@@ -49,24 +51,36 @@ struct TotalEarningsChart: View {
                         showedTotals = nonOneTimePlayers()
                     }
                 }
-                
-                Button(action: {
-                    showOneTimers.toggle()
-                    if showOneTimers {
-                        showedTotals = oneTimePlayers()
+                HStack {
+                    
+                    Button(action: {
+                        onTap()
+                    }) {
+                        Text("Back")
+                            .padding(10)
+                            .foregroundStyle(.orange)
+                            .background(RoundedRectangle(cornerRadius: 8).stroke(Color.gray))
                     }
-                    else {
-                        showedTotals = nonOneTimePlayers()
-                    }
-                }) {
-                    Text(showOneTimers ? "Show Non-One Timers" : "Show One Timers")
-                        .frame(maxWidth: .infinity)
-                        .padding(10)
-                        .foregroundStyle(.orange)
-                        .background(RoundedRectangle(cornerRadius: 8).stroke(Color.gray))
+                    Spacer()
+                    
+                    Button(action: {
+                        showOneTimers.toggle()
+                        if showOneTimers {
+                            showedTotals = oneTimePlayers()
+                        }
+                        else {
+                            showedTotals = nonOneTimePlayers()
+                        }
+                    }) {
+                        Text(showOneTimers ? "Show Non-One Timers" : "Show One Timers")
+                            .frame(maxWidth: .infinity)
+                            .padding(10)
+                            .foregroundStyle(.orange)
+                            .background(RoundedRectangle(cornerRadius: 8).stroke(Color.gray))
                         
+                    }
+                    .padding(.horizontal, 20)
                 }
-                .padding(.horizontal, 20)
             }
             .rotationEffect(fullscreen ? .degrees(90) : .zero)
         }
@@ -114,8 +128,8 @@ struct TotalEarningsChart: View {
                         .background(RoundedRectangle(cornerRadius: 8).stroke(Color.gray))
                     
                 }
+                .padding(.horizontal, 20)
             }
-            .padding(.horizontal, 20)
         }
     }
     
@@ -134,5 +148,5 @@ struct TotalEarningsChart: View {
 }
 
 #Preview {
-    TotalEarningsChart(fullscreen: false)
+    TotalEarningsChart(fullscreen: true, onTap: { print("yes") })
 }

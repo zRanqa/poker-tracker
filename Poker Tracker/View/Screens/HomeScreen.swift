@@ -14,27 +14,42 @@ struct HomeScreen: View {
     
     @State var playerTotals: [PlayerTotals] = []
     
+    @State var showFullscreenGraph: Bool = false
+    
     var body: some View {
         VStack {
             ScrollView(showsIndicators: false) {
                 VStack {
                     Text("Home")
                         .font(.title)
-                        .padding(.bottom)
+                        .padding(.bottom, 10)
+                    
+                    HStack {
+                        Text("All Time Earnings:")
+                            .font(.system(size: 25))
+                            .foregroundStyle(.orange)
+                        Spacer()
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, -15)
                     
                     TotalEarningsChart()
                     
-//                    ForEach (orderPlayerTotals(), id: \.playerDetails.id) { playerTotal in
-//                        HStack {
-//                        
-//                            Text(playerTotal.playerDetails.name)
-//                            Spacer()
-//                            Text("\(formatAmount(amount: playerTotal.totalMoney))")
-//                        }
-//                        .padding(.horizontal, 20)
-//                    }
-                    
-                    
+                    Button(action: {
+                        showFullscreenGraph = true
+                    }) {
+                        Text("View Full Graph")
+                            .frame(maxWidth: .infinity)
+                            .padding(10)
+                            .foregroundStyle(.orange)
+                            .background(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .stroke(Color.gray)
+                            )
+                    }
+                    .padding(.horizontal, 20)
+
+                    ShowOtherStats()
                     
                 }
             }
@@ -42,6 +57,11 @@ struct HomeScreen: View {
             Spacer()
             
             BottomBar(onNavigate: onNavigate)
+        }
+        .fullScreenCover(isPresented: $showFullscreenGraph) {
+            VStack {
+                FullGraphView(showFullscreenGraph: $showFullscreenGraph)
+            }
         }
         .edgesIgnoringSafeArea(.bottom)
         .onAppear() {
