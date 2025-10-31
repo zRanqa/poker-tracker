@@ -69,6 +69,17 @@ struct ShowOtherStats: View {
                     }
                 }
                 
+                VStack {
+                    HStack {
+                        Text("🔻 Most Money Lost In A Night:")
+                        Spacer()
+                    }
+                    HStack {
+                        Text("💀 \(getMostLostMoney()?.playerDetails.name ?? "Loading") — \(formatAmount(amount: getMostLostMoney()?.mostMoneyLost ?? 0))")
+                        Spacer()
+                    }
+                }
+                
             }
             
             .padding()
@@ -79,7 +90,8 @@ struct ShowOtherStats: View {
             // Biggest loss streak
             // Most buy ins
             // Most money won in night
-            //
+            // Most money lost in night
+
             
             
         }
@@ -106,6 +118,10 @@ struct ShowOtherStats: View {
     
     private func getMostMoney() -> PlayerTotals? {
         return playerTotals.sorted(by: { $0.mostMoneyWon > $1.mostMoneyWon }).first
+    }
+    
+    private func getMostLostMoney() -> PlayerTotals? {
+        return playerTotals.sorted(by: { $0.mostMoneyLost < $1.mostMoneyLost }).first
     }
     
 }

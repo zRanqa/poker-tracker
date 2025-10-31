@@ -22,6 +22,8 @@ struct PlayerTotals: Identifiable {
     var stopLossStreak: Bool = true
     
     var mostMoneyWon: Double = 0
+    
+    var mostMoneyLost: Double = 0
 }
 
 func calculateTotals() async -> [PlayerTotals] {
@@ -63,9 +65,14 @@ func calculateTotals() async -> [PlayerTotals] {
                     // Buy Ins
                     playerTotals[index].buyIns += playerEntry.buyIns
                     
-                    // Most Money
+                    // Most Money Won
                     if playerEntry.endingAmount - playerEntry.startingAmount > playerTotals[index].mostMoneyWon {
                         playerTotals[index].mostMoneyWon = playerEntry.endingAmount - playerEntry.startingAmount
+                    }
+                    
+                    // Most money Lost
+                    if playerEntry.endingAmount - playerEntry.startingAmount < playerTotals[index].mostMoneyLost {
+                        playerTotals[index].mostMoneyLost = playerEntry.endingAmount - playerEntry.startingAmount
                     }
                 }
             }
