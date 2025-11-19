@@ -15,6 +15,7 @@ enum AppScreen {
     case allGamesScreen
     case playersScreen
     case addPlayerDetailsScreen
+    case playerStatsScreen
 }
 
 class AppDelegate: NSObject, UIApplicationDelegate {

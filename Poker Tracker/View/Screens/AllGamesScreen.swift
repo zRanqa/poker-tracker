@@ -22,7 +22,7 @@ struct AllGamesScreen: View {
             ScrollView {
                 VStack {
                     
-                    ViewPlayersButton(text: "View Players", onTap: { onNavigate(.playersScreen) })
+//                    ViewPlayersButton(text: "View Players", onTap: { onNavigate(.playersScreen) })
                     
                     ForEach (orderNightEntries(), id: \.self.id) { nightEntry in
                         NightEntryView(nightEntry: nightEntry)

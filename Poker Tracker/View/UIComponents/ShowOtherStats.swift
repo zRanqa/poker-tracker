@@ -7,6 +7,10 @@
 
 import SwiftUI
 
+func formatPercentage(amount: Double) -> String {
+    return String(format: "%.0f%%", amount)
+}
+
 struct ShowOtherStats: View {
     
     @State var nightEntries: [NightEntry] = []
@@ -24,6 +28,18 @@ struct ShowOtherStats: View {
             }
             
             VStack(spacing: 15) {
+                
+                VStack {
+                    HStack {
+                        Text("💯 Current Highest Win Percentage:")
+                        Spacer()
+                    }
+                    HStack {
+                        Text("💯 \(getBiggestWinPercentage()?.playerDetails.name ?? "Loading") — \(formatPercentage(amount: getBiggestWinPercentage()?.winPercentage ?? 0))")
+                        Spacer()
+                    }
+                }
+                
                 VStack {
                     HStack {
                         Text("🏆 Current Longest Winstreak:")
@@ -122,6 +138,10 @@ struct ShowOtherStats: View {
     
     private func getMostLostMoney() -> PlayerTotals? {
         return playerTotals.sorted(by: { $0.mostMoneyLost < $1.mostMoneyLost }).first
+    }
+    
+    private func getBiggestWinPercentage() -> PlayerTotals? {
+        return playerTotals.sorted(by: { $0.winPercentage > $1.winPercentage }).first
     }
     
 }

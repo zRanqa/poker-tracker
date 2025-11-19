@@ -20,7 +20,14 @@ struct BottomBar: View {
                 }) {
                     Image(systemName: "house")
                         .font(.system(size: iconSize))
-                        .shadow(color: Color.white.opacity(0.8), radius: 4, x: 0, y: 0)
+                }
+                Spacer()
+                
+                Button(action: {
+                    onNavigate(.playerStatsScreen)
+                }) {
+                    Image(systemName: "chart.bar.xaxis")
+                        .font(.system(size: iconSize))
                 }
                 Spacer()
                 Button(action: {
@@ -28,7 +35,6 @@ struct BottomBar: View {
                 }) {
                     Image(systemName: "plus.app.fill")
                         .font(.system(size: 50))
-                        .shadow(color: Color.white.opacity(0.8), radius: 4, x: 0, y: 0)
                 }
                 Spacer()
                 Button(action: {
@@ -36,7 +42,14 @@ struct BottomBar: View {
                 }) {
                     Image(systemName: "info.circle.text.page")
                         .font(.system(size: iconSize))
-                        .shadow(color: Color.white.opacity(0.8), radius: 4, x: 0, y: 0)
+                }
+                
+                Spacer()
+                Button(action: {
+                    onNavigate(.playersScreen)
+                }) {
+                    Image(systemName: "person.circle")
+                        .font(.system(size: iconSize))
                 }
                 Spacer()
                 

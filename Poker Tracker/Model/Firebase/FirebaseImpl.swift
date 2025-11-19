@@ -88,8 +88,6 @@ func loadAllNightEntries() async throws -> [NightEntry] {
 }
 
 func saveAllNightsFromData() async throws {
-    let db = Firestore.firestore()
-    
     let nightEntries = await getNightsFromData()
     
     for nightEntry in nightEntries {

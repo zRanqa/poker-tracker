@@ -26,7 +26,7 @@ func getNightsFromData() async -> [NightEntry]  {
         }
         
         var nightEntries: [NightEntry] = []
-        var playerDetails: [PlayerDetails] = try await loadAllPlayerDetails()
+        let playerDetails: [PlayerDetails] = try await loadAllPlayerDetails()
         
         for nightDict in jsonArray {
             guard let date = nightDict["date"] as? String,

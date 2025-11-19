@@ -42,6 +42,10 @@ struct RootView: View {
                 AddPlayerDetailsScreen(
                     onNavigate: { screen in currentScreen = screen }
                 )
+            case .playerStatsScreen:
+                PlayerStatsScreen(
+                    onNavigate: { screen in currentScreen = screen }
+                )
             }
         }
         .onAppear() {
