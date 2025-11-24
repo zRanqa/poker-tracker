@@ -46,6 +46,11 @@ struct RootView: View {
                 PlayerStatsScreen(
                     onNavigate: { screen in currentScreen = screen }
                 )
+            case .individualStatsScreen(let playerTotals):
+                IndividualStatsScreen(
+                    playerTotals: playerTotals,
+                    onNavigate: { screen in currentScreen = screen}
+                )
             }
         }
         .onAppear() {

@@ -7,6 +7,13 @@
 
 import Foundation
 
+
+struct LinePoint: Identifiable {
+    var id = UUID()
+    var date: Date
+    var value: Double
+}
+
 struct PlayerTotals: Identifiable {
     var id = UUID()
     var playerDetails: PlayerDetails
@@ -30,6 +37,8 @@ struct PlayerTotals: Identifiable {
     
     var mostMoneyLost: Double = 0
     
+    var linePoints: [LinePoint] = []
+    
 }
 
 func calculateTotals() async -> [PlayerTotals] {
@@ -48,6 +57,10 @@ func calculateTotals() async -> [PlayerTotals] {
                 if let index = playerTotals.firstIndex(where: { $0.playerDetails.id == playerEntry.playerDetails.id }) {
                     // Total money
                     playerTotals[index].totalMoney += playerEntry.endingAmount - playerEntry.startingAmount
+                    
+                    // Line Points
+                    let newLinePoint = LinePoint(date: night.date, value: playerEntry.endingAmount - playerEntry.startingAmount)
+                    playerTotals[index].linePoints.append(newLinePoint)
                     
                     // Total games
                     playerTotals[index].totalGames += 1
@@ -101,6 +114,23 @@ func calculateTotals() async -> [PlayerTotals] {
                 }
             }
         }
+        
+        // Reverse line points and calculate
+        for i in playerTotals.indices {
+            
+            let lastDate = playerTotals[i].linePoints.last?.date ?? Date()
+            let startPoint = LinePoint(date: lastDate, value: 0)
+            
+            playerTotals[i].linePoints.append(startPoint)
+            playerTotals[i].linePoints.reverse()
+            
+            var totalMoney = 0.0
+            for j in playerTotals[i].linePoints.indices {
+                totalMoney = playerTotals[i].linePoints[j].value + totalMoney
+                playerTotals[i].linePoints[j].value = totalMoney
+            }
+        }
+
         
         return playerTotals
     }
