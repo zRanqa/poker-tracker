@@ -18,6 +18,10 @@ struct RootView: View {
     var body: some View {
         ZStack {
             switch currentScreen {
+            case .loginScreen:
+                LoginScreen(
+                    onNavigate: { screen in currentScreen = screen }
+                )
             case .homeScreen:
                 HomeScreen(
                     onNavigate: { screen in currentScreen = screen }
