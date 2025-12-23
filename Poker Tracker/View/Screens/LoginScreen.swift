@@ -58,14 +58,50 @@ struct LoginScreen: View {
     func login() {
         
         errorMessage = ""
+        
+        if email == "" || password == "" {
+            errorMessage = "All fields must be filled out!"
+            return
+        }
+        
+        if !email.contains("@") || !email.contains(".com") {
+            errorMessage = "Invalid email format!"
+            return
+        }
+        if !isValidPassword(password) {
+            errorMessage = "Password must be at least 8 characters long, contain one uppercase letter and one number!"
+            return
+        }
+        
         isLoading = true
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-            isLoading = false
+    
+        let jsonBody = ["email": email, "password": password]
+        postRequest(to: API.login.url, jsonBody: jsonBody) { result in
+            DispatchQueue.main.async {
+                isLoading = false
+            }
+            switch result {
+            case .success(let response):
+                print(response.status)
+                if response.status == "success" {
+                    if response.data != nil {
+                        // TODO: SAVE THE TOKEN IN MEMORY
+//                        print(response.data!)
+                        onNavigate(.homeScreen)
+                    }
+                }
+                else if response.status == "error" {
+                    errorMessage = response.message
+                }
+            case .failure(let error):
+                print("Request failed:", error)
+            }
         }
     }
     
     func signup() {
         errorMessage = ""
+        
         if email == "" || password == "" || name == "" {
             errorMessage = "All fields must be filled out!"
             return
@@ -79,7 +115,6 @@ struct LoginScreen: View {
             return
         }
         
-        errorMessage = ""
         isLoading = true
         
         let jsonBody = ["email": email]
@@ -105,6 +140,7 @@ struct LoginScreen: View {
     }
     
     func confirm_code() {
+        errorMessage = ""
         
         let filteredCode = codeInput.filter { $0.isNumber }
         if filteredCode.count < 6 {
@@ -112,7 +148,6 @@ struct LoginScreen: View {
             return
         }
         
-        errorMessage = ""
         isLoading = true
         if savedUserInfo == nil {
             errorMessage = "User info is nil??"
@@ -129,6 +164,11 @@ struct LoginScreen: View {
                 print(response)
                 if response.status == "success" {
                     // TODO: LOGIN!!
+                    verifictionCode = false
+                    email = savedUserInfo!.email
+                    password = savedUserInfo!.password
+                    toggleState()
+                    login()
                 }
                 else if response.status == "error" {
                     errorMessage = response.message
@@ -241,6 +281,12 @@ struct LoginScreen: View {
                         .transition(.opacity)
                         .animation(.easeInOut(duration: 0.25), value: title)
                         .padding(.top, 100)
+                    
+                    SimpleButton(text: "Verification TEST BUTTON", onTap: {verifictionCode = true}, isLoading: $isLoading)
+                        .frame(maxWidth: 300)
+                        .opacity(1)
+                        .transition(.opacity)
+                        .animation(.easeInOut(duration: 0.25), value: title)
                 }
             }
             else {
@@ -350,7 +396,7 @@ struct SimpleButton: View {
             .padding(12)
             .background(Color.orange)
             .cornerRadius(8)
-            .shadow(color: Color.white.opacity(0.8), radius: 4, x: 0, y: 0)
+//            .shadow(color: Color.white.opacity(0.8), radius: 4, x: 0, y: 0)
         }
         
     }

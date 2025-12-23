@@ -12,23 +12,28 @@ enum API {
 
     case createVerificationCode
     case createAccount
+    case login
 
     var url: String {
         switch self {
         case .createVerificationCode: return API.baseURL + "create-verification-code"
         case .createAccount: return API.baseURL + "create-account"
+        case .login: return API.baseURL + "login"
         }
     }
 }
 
-
-struct APIResponse: Codable {
-    let status: String
-    let message: String
-    let data: String?
+struct AuthData: Codable {
+    let token: String
 }
 
-func postRequest(to urlString: String, jsonBody: [String: Any], completion: @escaping (Result<APIResponse, Error>) -> Void) {
+struct APIResponse<T: Codable>: Codable {
+    let status: String
+    let message: String
+    let data: T?
+}
+
+func postRequest(to urlString: String, jsonBody: [String: Any], completion: @escaping (Result<APIResponse<AuthData>, Error>) -> Void) {
     
     guard let url = URL(string: urlString) else {
         completion(.failure(NSError(domain: "Invalid URL", code: 0)))
@@ -58,7 +63,8 @@ func postRequest(to urlString: String, jsonBody: [String: Any], completion: @esc
         }
         print(String(data: data, encoding: .utf8) ?? "invalid json")
         do {
-            let apiResponse = try JSONDecoder().decode(APIResponse.self, from: data)
+            let apiResponse = try JSONDecoder().decode(APIResponse<AuthData>.self, from: data)
+
             completion(.success(apiResponse))
         } catch {
             completion(.failure(error))
