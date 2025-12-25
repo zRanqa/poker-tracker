@@ -13,47 +13,51 @@ struct RootView: View {
     @Query var playerEntries: [PlayerEntry] = []
     @Query var savedDates: [SavedDate] = []
     
-    @Binding var currentScreen: AppScreen
+    @EnvironmentObject var appState: AppState
     
     var body: some View {
         ZStack {
-            switch currentScreen {
+            switch appState.currentScreen {
             case .loginScreen:
                 LoginScreen(
-                    onNavigate: { screen in currentScreen = screen }
+                    onNavigate: { screen in appState.currentScreen = screen }
+                )
+            case .groupScreen:
+                GroupScreen(
+                    onNavigate: { screen in appState.currentScreen = screen }
                 )
             case .homeScreen:
                 HomeScreen(
-                    onNavigate: { screen in currentScreen = screen }
+                    onNavigate: { screen in appState.currentScreen = screen }
                 )
             case .addNightScreen:
                 AddNightScreen(
-                    onNavigate: { screen in currentScreen = screen }
+                    onNavigate: { screen in appState.currentScreen = screen }
                 )
             case .addPlayerToNightScreen:
                 AddPlayerToNightScreen(
-                    onNavigate: { screen in currentScreen = screen }
+                    onNavigate: { screen in appState.currentScreen = screen }
                 )
             case .allGamesScreen:
                 AllGamesScreen(
-                    onNavigate: { screen in currentScreen = screen }
+                    onNavigate: { screen in appState.currentScreen = screen }
                 )
             case .playersScreen:
                 PlayersScreen(
-                    onNavigate: { screen in currentScreen = screen }
+                    onNavigate: { screen in appState.currentScreen = screen }
                 )
             case .addPlayerDetailsScreen:
                 AddPlayerDetailsScreen(
-                    onNavigate: { screen in currentScreen = screen }
+                    onNavigate: { screen in appState.currentScreen = screen }
                 )
             case .playerStatsScreen:
                 PlayerStatsScreen(
-                    onNavigate: { screen in currentScreen = screen }
+                    onNavigate: { screen in appState.currentScreen = screen }
                 )
             case .individualStatsScreen(let playerTotals):
                 IndividualStatsScreen(
                     playerTotals: playerTotals,
-                    onNavigate: { screen in currentScreen = screen}
+                    onNavigate: { screen in appState.currentScreen = screen}
                 )
             }
         }
@@ -72,7 +76,7 @@ struct PreviewRootWrapper: View {
     @State private var currentScreen: AppScreen = .addNightScreen
 
     var body: some View {
-        RootView(currentScreen: $currentScreen)
+        RootView()
     }
 }
 
