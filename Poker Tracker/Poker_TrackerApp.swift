@@ -7,11 +7,23 @@
 
 import SwiftUI
 
+
+enum AppScreen {
+    
+    case loginScreen
+    case homeScreen
+    case groupScreen(PokerGroup)
+}
+
 @main
 struct Poker_TrackerApp: App {
+    
+    @StateObject private var appState = AppState()
+        
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RootView()
+                .environmentObject(appState)
         }
     }
 }
