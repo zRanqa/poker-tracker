@@ -22,8 +22,11 @@ struct RootView: View {
                 HomeScreen(
                     onNavigate: { screen in appState.currentScreen = screen }
                 )
-            case .groupScreen:
-                Text("yes")
+            case .groupScreen(let group):
+                GroupScreen(
+                    onNavigate: { screen in appState.currentScreen = screen },
+                    group: group
+                )
                 
                 //                HomeScreen(
                 //                    onNavigate: { screen in appState.currentScreen = screen }
