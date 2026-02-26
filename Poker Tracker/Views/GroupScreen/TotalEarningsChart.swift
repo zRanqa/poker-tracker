@@ -12,6 +12,9 @@ struct PlayerTotals: Identifiable {
     var id: String
     var name: String
     var totalMoney: Double
+    var winPercentage: Double = 50.0
+    var winStreak: Int = 4
+    var buyIns: Int = 2
 }
 
 func formatMoney(double: Double) -> String {
