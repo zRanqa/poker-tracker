@@ -8,9 +8,23 @@
 import SwiftUI
 
 struct SessionsTab: View {
+    
+    @State var groupSessions: [PokerSession] = []
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ScrollView {
+            VStack(alignment: .leading) {
+                ForEach(groupSessions, id: \.id) { pokerSession in
+                    SessionView(pokerSession: pokerSession)
+                }
+            }
+        }
+        
+        .onAppear() {
+            groupSessions = [getTestPokerSession(), getTestPokerSession(), getTestPokerSession(), getTestPokerSession()]
+        }
     }
+        
 }
 
 #Preview {

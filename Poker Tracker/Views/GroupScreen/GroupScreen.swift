@@ -72,7 +72,7 @@ struct GroupScreen: View {
                     SessionsTab()
                 }
                 else if selectedTab == "New Night" {
-                    NewNightTab()
+                    NewNightTab(onNavigate: onNavigate)
                 }
                 
                 Spacer()

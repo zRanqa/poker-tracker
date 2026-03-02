@@ -21,7 +21,6 @@ struct YearDropdown: View {
         Picker("Select an option", selection: $selectedOption) {
             ForEach(options, id: \.self) {
                 Text($0)
-                    .foregroundStyle(.red)
             }
         }
         .pickerStyle(.menu)
