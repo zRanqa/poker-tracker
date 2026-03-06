@@ -11,6 +11,7 @@ struct AddPlayerToNightView: View {
     @Environment(\.dismiss) private var dismiss
 
     var onSave: (PlayerNightEntry) -> Void
+    
 
     @State private var selectedPlayer = ""
     @State private var startAmount = ""

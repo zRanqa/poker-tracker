@@ -15,7 +15,15 @@ struct NewNightTab: View {
     @State var nightDate: Date = Date()
     
     @State var showingAddPlayer = false
+    
     @State var playerNightEntries: [PlayerNightEntry] = []
+//    @State var playerNightEntries: [PlayerNightEntry] = [
+//        PlayerNightEntry(id: "1", name: "Player 1", startAmount: 20, endAmount: 40, buyIns: 0),
+//        PlayerNightEntry(id: "2", name: "Player 2", startAmount: 20, endAmount: 30, buyIns: 0),
+//        PlayerNightEntry(id: "3", name: "Player 3", startAmount: 20, endAmount: 20, buyIns: 0),
+//        PlayerNightEntry(id: "4", name: "Player 4", startAmount: 20, endAmount: 10, buyIns: 0),
+//        PlayerNightEntry(id: "5", name: "Player 5", startAmount: 20, endAmount: 0, buyIns: 0)
+//    ]
     
     var sortedPlayerNightEntries: [PlayerNightEntry] {
         playerNightEntries.sorted {
@@ -24,30 +32,40 @@ struct NewNightTab: View {
         }
     }
     
+    func saveNight() {
+        // CHECK IF NIGHT VALID
+        
+    }
+    
     var body: some View {
         VStack {
-            DatePickerView(selectedDate: $nightDate)
-            
-            HStack {
-                Text("Players: ")
-                    .font(.system(size: 40))
-                Spacer()
-            }
-            VStack(spacing: 5) {
-                ForEach(sortedPlayerNightEntries) { playerEntry in
-                    PlayerNightRow(playerNightEntry: playerEntry)
+            VStack {
+                DatePickerView(selectedDate: $nightDate)
+                
+                HStack {
+                    Text("Players: ")
+                        .font(.system(size: 40))
+                    Spacer()
+                }
+                VStack(spacing: 5) {
+                    ForEach(sortedPlayerNightEntries) { playerEntry in
+                        PlayerNightRow(playerNightEntry: playerEntry)
+                    }
+                }
+                
+                Button(action: {
+                    showingAddPlayer = true
+                    
+                }) {
+                    Image(systemName: "plus")
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 50)
+                        .border(Color.blue, width: 1)
                 }
             }
-        
-            Button(action: {
-                showingAddPlayer = true
-                
-            }) {
-                Image(systemName: "plus")
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 50)
-                    .border(Color.blue, width: 1)
-            }
+            Spacer()
+            
+            SaveNightButton(onTap: saveNight)
             
         }
         .padding(.horizontal, 10)

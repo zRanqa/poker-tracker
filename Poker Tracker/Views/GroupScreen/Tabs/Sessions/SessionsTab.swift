@@ -18,6 +18,7 @@ struct SessionsTab: View {
                     SessionView(pokerSession: pokerSession)
                 }
             }
+            .padding(.top, 5)
         }
         
         .onAppear() {
