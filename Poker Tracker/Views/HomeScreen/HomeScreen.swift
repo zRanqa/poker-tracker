@@ -16,9 +16,6 @@ struct HomeScreen: View {
         
         PokerGroup(id: "2", name: "Test Group 2", color: Color(red: 240/255, green: 141/255, blue: 100/255)),
         
-        PokerGroup(id: "3", name: "Test Group 3", color: Color(red: 240/255, green: 141/255, blue: 100/255)),
-        PokerGroup(id: "4", name: "Test Group 4", color: Color(red: 240/255, green: 141/255, blue: 100/255)),
-        PokerGroup(id: "5", name: "Test Group 5", color: Color(red: 240/255, green: 141/255, blue: 100/255))
     ]
     
     var body: some View {

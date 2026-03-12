@@ -16,7 +16,7 @@ struct NewNightTab: View {
     
     @State var showingAddPlayer = false
     
-    @State var playerNightEntries: [PlayerNightEntry] = []
+    @State var sessionEntries: [SessionEntry] = []
 //    @State var playerNightEntries: [PlayerNightEntry] = [
 //        PlayerNightEntry(id: "1", name: "Player 1", startAmount: 20, endAmount: 40, buyIns: 0),
 //        PlayerNightEntry(id: "2", name: "Player 2", startAmount: 20, endAmount: 30, buyIns: 0),
@@ -25,8 +25,8 @@ struct NewNightTab: View {
 //        PlayerNightEntry(id: "5", name: "Player 5", startAmount: 20, endAmount: 0, buyIns: 0)
 //    ]
     
-    var sortedPlayerNightEntries: [PlayerNightEntry] {
-        playerNightEntries.sorted {
+    var sortedSessionEntries: [SessionEntry] {
+        sessionEntries.sorted {
             ($0.endAmount - $0.startAmount) >
             ($1.endAmount - $1.startAmount)
         }
@@ -48,8 +48,8 @@ struct NewNightTab: View {
                     Spacer()
                 }
                 VStack(spacing: 5) {
-                    ForEach(sortedPlayerNightEntries) { playerEntry in
-                        PlayerNightRow(playerNightEntry: playerEntry)
+                    ForEach(sortedSessionEntries) { sessionEntry in
+                        PlayerNightRow(sessionEntry: sessionEntry)
                     }
                 }
                 
@@ -70,8 +70,8 @@ struct NewNightTab: View {
         }
         .padding(.horizontal, 10)
         .sheet(isPresented: $showingAddPlayer) {
-            AddPlayerToNightView { newEntry in
-                playerNightEntries.append(newEntry)
+            AddEntryToSessionView { newEntry in
+                sessionEntries.append(newEntry)
             }
         }
     }

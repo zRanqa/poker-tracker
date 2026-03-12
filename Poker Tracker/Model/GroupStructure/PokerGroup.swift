@@ -12,4 +12,6 @@ struct PokerGroup: Identifiable {
     var id: String
     var name: String
     var color: Color
+    var pokerSessions: [PokerSession] = []
+    var groupMembers: [GroupMember] = []
 }

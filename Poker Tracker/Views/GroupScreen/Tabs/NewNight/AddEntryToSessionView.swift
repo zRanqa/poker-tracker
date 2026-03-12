@@ -7,10 +7,10 @@
 
 import SwiftUI
 
-struct AddPlayerToNightView: View {
+struct AddEntryToSessionView: View {
     @Environment(\.dismiss) private var dismiss
 
-    var onSave: (PlayerNightEntry) -> Void
+    var onSave: (SessionEntry) -> Void
     
 
     @State private var selectedPlayer = ""
@@ -52,9 +52,9 @@ struct AddPlayerToNightView: View {
                             errorMessage = "All fields must be filled in."
                             return
                         }
-                        let entry = PlayerNightEntry(
+                        let entry = SessionEntry(
                             id: UUID().uuidString,
-                            name: selectedPlayer,
+                            groupMember: GroupMember(id: UUID().uuidString, name: selectedPlayer),
                             startAmount: Double(startAmount) ?? 0,
                             endAmount: Double(endAmount) ?? 0,
                             buyIns: Int(buyIns) ?? 0
@@ -76,15 +76,15 @@ struct AddPlayerToNightView: View {
     }
 }
 
-struct AddPlayerToNightViewPreview: View {
-    @State var playerNightEntries: [PlayerNightEntry] = []
+struct AddEntryToSessionViewPreview: View {
+    @State var sessionEntries: [SessionEntry] = []
     var body : some View {
-        AddPlayerToNightView { newEntry in
-            playerNightEntries.append(newEntry)
+        AddEntryToSessionView { newEntry in
+            sessionEntries.append(newEntry)
         }
     }
 }
 
 #Preview {
-    AddPlayerToNightViewPreview()
+    AddEntryToSessionViewPreview()
 }

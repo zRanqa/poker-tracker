@@ -13,7 +13,7 @@ struct SessionView: View {
     @Environment(\.colorScheme) var colorScheme
     
     var pokerSession: PokerSession
-    @State var orderedNightEntries: [PlayerNightEntry] = []
+    @State var orderedSessionEntries: [SessionEntry] = []
     
     var body: some View {
         VStack {
@@ -23,26 +23,26 @@ struct SessionView: View {
                 Spacer()
             }
             Grid(horizontalSpacing: 8, verticalSpacing: 4) {
-                ForEach(orderedNightEntries) { playerNightEntry in
+                ForEach(orderedSessionEntries) { sessionEntry in
                     GridRow {
-                        Text(playerNightEntry.name)
+                        Text(sessionEntry.groupMember.name)
                             .frame(maxWidth: .infinity, alignment: .leading)
                         
-                        Text(formatMoney(amount: playerNightEntry.startAmount))
+                        Text(formatMoney(amount: sessionEntry.startAmount))
                             .frame(width: 60, alignment: .trailing)
                         
-                        Text(formatMoney(amount: playerNightEntry.endAmount))
+                        Text(formatMoney(amount: sessionEntry.endAmount))
                             .frame(width: 60, alignment: .trailing)
                             .foregroundStyle(
-                                playerNightEntry.endAmount < playerNightEntry.startAmount
+                                sessionEntry.endAmount < sessionEntry.startAmount
                                 ? .red : .green
                             )
                         Text(formatDifference(amount:
-                                                playerNightEntry.endAmount - playerNightEntry.startAmount
+                                                sessionEntry.endAmount - sessionEntry.startAmount
                                              ))
                         .frame(width: 70, alignment: .trailing)
                         .foregroundStyle(
-                            playerNightEntry.endAmount < playerNightEntry.startAmount
+                            sessionEntry.endAmount < sessionEntry.startAmount
                             ? .red : .green
                         )
                     }
@@ -57,7 +57,7 @@ struct SessionView: View {
         )
         .padding(.horizontal, 10)
         .onAppear {
-            orderedNightEntries = Array(pokerSession.playerNightEntries).sorted { $0.endAmount > $1.endAmount }
+            orderedSessionEntries = Array(pokerSession.sessionEntries).sorted { $0.endAmount > $1.endAmount }
         }
     }
 }

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct PlayerNightRow: View {
     
-    var playerNightEntry: PlayerNightEntry
+    var sessionEntry: SessionEntry
     
     private func determineColor(startAmount: Double, endAmount: Double) -> Color {
         if endAmount < startAmount {
@@ -27,20 +27,20 @@ struct PlayerNightRow: View {
         HStack {
             Grid(horizontalSpacing: 8, verticalSpacing: 4) {
                 GridRow {
-                    Text(playerNightEntry.name)
+                    Text(sessionEntry.groupMember.name)
                         .frame(maxWidth: .infinity, alignment: .leading)
                     
-                    Text(formatMoney(amount: playerNightEntry.startAmount))
+                    Text(formatMoney(amount: sessionEntry.startAmount))
                         .frame(width: 60, alignment: .trailing)
                     
-                    Text(formatMoney(amount: playerNightEntry.endAmount))
+                    Text(formatMoney(amount: sessionEntry.endAmount))
                         .frame(width: 60, alignment: .trailing)
-                        .foregroundStyle(determineColor(startAmount: playerNightEntry.startAmount, endAmount: playerNightEntry.endAmount))
+                        .foregroundStyle(determineColor(startAmount: sessionEntry.startAmount, endAmount: sessionEntry.endAmount))
                     Text(formatDifference(amount:
-                                            playerNightEntry.endAmount - playerNightEntry.startAmount
+                                            sessionEntry.endAmount - sessionEntry.startAmount
                                          ))
                     .frame(width: 70, alignment: .trailing)
-                    .foregroundStyle(determineColor(startAmount: playerNightEntry.startAmount, endAmount: playerNightEntry.endAmount))
+                    .foregroundStyle(determineColor(startAmount: sessionEntry.startAmount, endAmount: sessionEntry.endAmount))
                 }
             }
     
@@ -53,5 +53,5 @@ struct PlayerNightRow: View {
 }
 
 #Preview {
-    PlayerNightRow(playerNightEntry: getTestPlayerNightEntry())
+    PlayerNightRow(sessionEntry: getTestSessionEntry())
 }
