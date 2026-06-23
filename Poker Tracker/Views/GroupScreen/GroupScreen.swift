@@ -91,5 +91,5 @@ struct GroupScreen: View {
 }
 
 #Preview {
-    GroupScreen(onNavigate: {_ in }, group: PokerGroup(id: "1", name: "Test Group", color: Color(red: 0.5, green: 0.5, blue: 0.5)))
+    GroupScreen(onNavigate: {_ in }, group: PokerGroup(id: 1, name: "Test Group", color: Color(red: 0.5, green: 0.5, blue: 0.5)))
 }

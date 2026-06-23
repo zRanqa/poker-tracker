@@ -61,6 +61,6 @@ struct HomeGroupSelector: View {
 }
 
 #Preview {
-    HomeGroupSelector(onNavigate: { _ in }, group: PokerGroup(id: "1", name: "Test Group", color: Color(red: 240/255, green: 229/255, blue: 132/255)))
+    HomeGroupSelector(onNavigate: { _ in }, group: PokerGroup(id: 1, name: "Test Group", color: Color(red: 240/255, green: 229/255, blue: 132/255)))
         .padding()
 }

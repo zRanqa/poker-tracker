@@ -8,15 +8,13 @@
 import SwiftUI
 
 struct HomeScreen: View {
-    
     var onNavigate: (AppScreen) -> Void
+    @EnvironmentObject var appState: AppState
     
-    var groups: [PokerGroup] = [
-        PokerGroup(id: "1", name: "Test Group", color: Color(red: 240/255, green: 229/255, blue: 132/255)),
-        
-        PokerGroup(id: "2", name: "Test Group 2", color: Color(red: 240/255, green: 141/255, blue: 100/255)),
-        
-    ]
+    
+    @State var groups: [PokerGroup] = []
+    
+    var vm = HomeScreenViewModel()
     
     var body: some View {
         VStack {
@@ -48,7 +46,9 @@ struct HomeScreen: View {
             Spacer()
                 
         }
-        
+        .task {
+            groups = await vm.getGroups(token: appState.token ?? "")
+        }
     }
 }
 
