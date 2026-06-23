@@ -17,8 +17,11 @@ struct SessionsTab: View {
                 ForEach(groupSessions, id: \.id) { pokerSession in
                     SessionView(pokerSession: pokerSession)
                 }
+                
             }
-            .padding(.top, 5)
+            .padding(.top, 10)
+            .padding(.bottom, 20)
+            .padding(.horizontal, 10)
         }
         
         .onAppear() {

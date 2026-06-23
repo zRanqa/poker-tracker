@@ -50,12 +50,13 @@ struct SessionView: View {
             }
         }
         
-        .padding(10)
-        .overlay(
-            RoundedRectangle(cornerRadius: 20)
-                .stroke(colorScheme == .dark ? Color.white : Color.black, lineWidth: 3)
-        )
-        .padding(.horizontal, 10)
+        .padding(15)
+        .background(.ultraThinMaterial)
+        .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: 24, style: .continuous).stroke(.white.opacity(0.25), lineWidth: 1)
+        }
+        .shadow(radius: 5)
         .onAppear {
             orderedSessionEntries = Array(pokerSession.sessionEntries).sorted { $0.endAmount > $1.endAmount }
         }

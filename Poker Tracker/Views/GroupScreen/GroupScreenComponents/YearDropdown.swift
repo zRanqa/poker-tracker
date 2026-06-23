@@ -23,10 +23,16 @@ struct YearDropdown: View {
                 Text($0)
             }
         }
+        
         .pickerStyle(.menu)
-        .frame(width: 85)
-        .tint(colorScheme == .dark ? Color.white : Color.black)
-        .border(colorScheme == .dark ? Color.white : Color.black, width: 1)
+        .background(.ultraThinMaterial)
+        .tint(.primary)
+        
+        .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+        .overlay(
+            Capsule()
+                .stroke(Color(.separator), lineWidth: 1)
+        )
         
     }
     

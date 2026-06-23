@@ -28,27 +28,43 @@ struct PlayerNightRow: View {
             Grid(horizontalSpacing: 8, verticalSpacing: 4) {
                 GridRow {
                     Text(sessionEntry.groupMember.name)
+                        .font(.body)
+                        .fontWeight(.semibold)
                         .frame(maxWidth: .infinity, alignment: .leading)
                     
                     Text(formatMoney(amount: sessionEntry.startAmount))
+                        .font(.body)
+                        .foregroundStyle(.secondary)
                         .frame(width: 60, alignment: .trailing)
                     
                     Text(formatMoney(amount: sessionEntry.endAmount))
+                        .font(.body)
+                        .fontWeight(.medium)
                         .frame(width: 60, alignment: .trailing)
                         .foregroundStyle(determineColor(startAmount: sessionEntry.startAmount, endAmount: sessionEntry.endAmount))
                     Text(formatDifference(amount:
                                             sessionEntry.endAmount - sessionEntry.startAmount
                                          ))
+                    .font(.body)
+                    .fontWeight(.semibold)
                     .frame(width: 70, alignment: .trailing)
                     .foregroundStyle(determineColor(startAmount: sessionEntry.startAmount, endAmount: sessionEntry.endAmount))
                 }
             }
     
         }
-        .padding(.horizontal)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 14)
         .frame(maxWidth: .infinity)
-        .frame(height: 50)
-        .border(Color.blue, width: 1)
+        
+        .background(Color(.secondarySystemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(Color(.separator), lineWidth: 0.5)
+        )
+//        .frame(height: 50)
+//        .border(Color.blue, width: 1)
     }
 }
 

@@ -69,11 +69,15 @@ struct OverviewPlayerCard: View {
                 .padding(.bottom, 10)
                 .padding(.trailing, 10)
             }
+            
+            .padding(5)
             .frame(width: 170, height: 170)
-            .overlay(
-                RoundedRectangle(cornerRadius: 20)
-                    .stroke(colorScheme == .dark ? Color.white : Color.black, lineWidth: 3)
-            )
+            .background(.ultraThinMaterial)
+            .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+            .overlay {
+                RoundedRectangle(cornerRadius: 24, style: .continuous).stroke(.white.opacity(0.25), lineWidth: 1)
+            }
+            .shadow(radius: 12)
         }
         .tint(.primary)
     }

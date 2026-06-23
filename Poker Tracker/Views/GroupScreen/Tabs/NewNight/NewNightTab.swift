@@ -47,6 +47,7 @@ struct NewNightTab: View {
                         .font(.system(size: 40))
                     Spacer()
                 }
+                .padding(.bottom, 5)
                 VStack(spacing: 5) {
                     ForEach(sortedSessionEntries) { sessionEntry in
                         PlayerNightRow(sessionEntry: sessionEntry)
@@ -58,9 +59,17 @@ struct NewNightTab: View {
                     
                 }) {
                     Image(systemName: "plus")
+                        .font(.body)
+                        .fontWeight(.semibold)
+                        .foregroundStyle(.secondary)
                         .frame(maxWidth: .infinity)
                         .frame(height: 50)
-                        .border(Color.blue, width: 1)
+                        .background(Color(.secondarySystemBackground))
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .stroke(Color(.separator), lineWidth: 0.5)
+                        )
                 }
             }
             Spacer()

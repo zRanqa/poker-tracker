@@ -23,17 +23,22 @@ struct DatePickerView: View {
                 HStack {
                     Spacer()
                     Text(formatDate(date: selectedDate))
-                        .foregroundColor(.blue)
-                        .font(.system(size: 22))
+                        .font(.system(size: 22, weight: .medium))
+                        .foregroundStyle(.primary)
                     Spacer()
                     Image(systemName: "calendar")
-                        .foregroundColor(.blue)
                         .font(.system(size: 20))
+                        .foregroundColor(.blue)
                     
                 }
-                .padding()
-                .border(Color.blue, width: 1)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .stroke(Color(.separator), lineWidth: 3)
+                )
             }
+            .buttonStyle(.plain)
         }
         .sheet(isPresented: $showDatePicker) {
             VStack {

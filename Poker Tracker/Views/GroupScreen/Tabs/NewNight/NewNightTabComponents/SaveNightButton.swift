@@ -14,17 +14,16 @@ struct SaveNightButton: View {
     var body: some View {
         Button(action: onTap) {
             Text("Save Night")
-                .foregroundStyle(.black)
+                .font(.body)
+                .fontWeight(.semibold)
+                .foregroundStyle(.white)
                 .frame(maxWidth: .infinity)
                 .frame(height: 50)
-            
-            
-                .background(Color(red: 100/255, green: 255/255, blue: 100/255))
-            
-                .cornerRadius(15)
+                .background(Color.green)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 15)
-                        .stroke(Color(red: 60/255, green: 200/255, blue: 60/255), lineWidth: 3)
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(Color.green.opacity(0.4), lineWidth: 0.5)
                 )
         }
     }
