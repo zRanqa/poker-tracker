@@ -17,7 +17,7 @@ class AppState: ObservableObject {
 
     func login(with token: String) {
         self.token = token
-//        self.currentScreen = .groupScreen
+        self.currentScreen = .homeScreen
     }
 
     func logout() {

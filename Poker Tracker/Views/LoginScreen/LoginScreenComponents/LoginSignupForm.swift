@@ -19,10 +19,10 @@ struct LoginSignupForm: View {
     var onNavigate: (AppScreen) -> Void
     @Binding var loginState: LoginState
     
-    @State private var email: String = "Test"
+    @State private var email: String = "jonnoach@gmail.com"
     @State private var emailValid: Bool = true
     
-    @State private var password: String = ""
+    @State private var password: String = "securePassword1"
     @State private var passwordValid: Bool = true
     
     @State private var name: String = ""
@@ -36,6 +36,8 @@ struct LoginSignupForm: View {
     @State private var accountButtonLabel: String = "Sign up!"
     @State private var loginSignupButtonLabel: String = "Login!"
     
+    @State private var errorMessage: String = ""
+    
     
     private let lightBackground: Color = Color(red: 0.9, green: 0.9, blue: 0.9)
     private let darkBackground: Color = Color(red: 0.1, green: 0.1, blue: 0.1)
@@ -43,9 +45,27 @@ struct LoginSignupForm: View {
     private let lightText: Color = Color(red: 0.7, green: 0.7, blue: 0.7)
     private let darkText: Color = Color(red: 0.4, green: 0.4, blue: 0.4)
     
+    private let vm = LoginSignupFormViewModel()
+    
     func confirmButton() {
         if state == .login {
-            onNavigate(.homeScreen)
+            
+            guard email.contains("@"), email.contains(".") else {
+                errorMessage = "Please enter a valid email"
+                return
+            }
+            guard !password.isEmpty else {
+                errorMessage = "Please enter a password"
+                return
+            }
+            
+            errorMessage = ""
+                
+            Task {
+                errorMessage = await vm.login(email: email, password: password, appState: appState)
+            }
+            
+//            onNavigate(.homeScreen)
         }
         else {
             loginState = .verification
@@ -123,6 +143,13 @@ struct LoginSignupForm: View {
                     .autocorrectionDisabled(true)
                     .autocapitalization(.none)
                 
+                if errorMessage.isEmpty == false {
+                    Text(errorMessage)
+                        .font(.body)
+                        .foregroundStyle(.red)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal, 5)
+                }
                 
                 LoginSignupButton(text: loginSignupButtonLabel, onTap: confirmButton, isLoading: $isLoading)
                 
