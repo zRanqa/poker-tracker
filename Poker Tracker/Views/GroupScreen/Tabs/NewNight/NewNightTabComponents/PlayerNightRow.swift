@@ -27,7 +27,7 @@ struct PlayerNightRow: View {
         HStack {
             Grid(horizontalSpacing: 8, verticalSpacing: 4) {
                 GridRow {
-                    Text(sessionEntry.groupMemberId.uuidString)
+                    Text(sessionEntry.groupMember.name)
                         .font(.body)
                         .fontWeight(.semibold)
                         .frame(maxWidth: .infinity, alignment: .leading)

@@ -25,7 +25,7 @@ struct SessionView: View {
             Grid(horizontalSpacing: 8, verticalSpacing: 4) {
                 ForEach(orderedSessionEntries) { sessionEntry in
                     GridRow {
-                        Text("Name")
+                        Text(sessionEntry.groupMember.name)
                             .frame(maxWidth: .infinity, alignment: .leading)
                         
                         Text(formatMoney(amount: sessionEntry.startAmount))

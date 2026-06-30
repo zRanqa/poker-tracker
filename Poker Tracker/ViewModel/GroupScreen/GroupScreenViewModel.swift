@@ -14,12 +14,13 @@ class GroupScreenViewModel {
     func getGroupDetails(token: String, group: PokerGroup) async -> PokerGroup {
         
         var newGroup = group
-        // Get group members
-        
-        // get sessions
         do {
-            newGroup.pokerSessions = try await fetchGroupSessions(token: token, groupId: group.id)
-            print(newGroup.pokerSessions.count)
+            // Get group members
+            newGroup.groupMembers = try await fetchGroupMembers(token: token, groupId: group.id)
+            
+            // get sessions
+            newGroup.pokerSessions = try await fetchGroupSessions(token: token, groupId: group.id, groupMembers: newGroup.groupMembers)
+            print(newGroup.groupMembers.count)
         } catch {
             print("error at groupScreenViewModel")
             print(error)

@@ -8,7 +8,7 @@
 
 import Foundation
 
-func fetchGroupSessions(token: String, groupId: Int) async throws -> [PokerSession] {
+func fetchGroupSessions(token: String, groupId: Int, groupMembers: [GroupMember]) async throws -> [PokerSession] {
     guard let url = URL(string: getApiUrl(endpoint: .getGroupSessions)) else {
         return []
     }
@@ -33,7 +33,7 @@ func fetchGroupSessions(token: String, groupId: Int) async throws -> [PokerSessi
         let sessionEntries = session.sessions.map { dto in
             SessionEntry(
                 id: dto.id,
-                groupMemberId: UUID(uuidString: dto.user_id) ?? UUID(),
+                groupMember: groupMembers.first(where: { $0.id == UUID(uuidString: dto.user_id) })!,
                 startAmount: dto.starting_amount,
                 endAmount: dto.ending_amount,
                 buyIns: dto.buy_ins
@@ -50,4 +50,32 @@ func fetchGroupSessions(token: String, groupId: Int) async throws -> [PokerSessi
     }
 
     return pokerSessions
+}
+
+func fetchGroupMembers(token: String, groupId: Int) async throws -> [GroupMember] {
+    guard let url = URL(string: getApiUrl(endpoint: .getGroupMembers)) else {
+        return []
+    }
+    
+    var request = URLRequest(url: url)
+    request.httpMethod = "POST"
+    request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+    request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+    request.httpBody = try JSONEncoder().encode([
+        "group_id": groupId
+    ])
+    
+    let (data, _) = try await URLSession.shared.data(for: request)
+    let groupMemberDTO = try JSONDecoder().decode(GroupMemberResponse.self, from: data)
+    
+    let groupMembers: [GroupMember] = groupMemberDTO.data.map { dto in
+        GroupMember(
+            id: UUID(uuidString: dto.id) ?? UUID(),
+            name: dto.name,
+            email: dto.email,
+            role: dto.role
+        )
+    }
+    
+    return groupMembers
 }

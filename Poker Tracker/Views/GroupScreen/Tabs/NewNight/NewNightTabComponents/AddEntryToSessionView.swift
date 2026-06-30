@@ -58,8 +58,8 @@ struct AddEntryToSessionView: View {
                             return
                         }
                         let entry = SessionEntry(
-                            id: idNumber,
-                            groupMemberId: UUID(),
+                            id: String(idNumber),
+                            groupMember: getRandomGroupMember(),
                             startAmount: Double(startAmount) ?? 0,
                             endAmount: Double(endAmount) ?? 0,
                             buyIns: Int(buyIns) ?? 0

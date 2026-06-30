@@ -9,11 +9,11 @@ struct PokerSessionDTO: Codable {
     let id: Int
     let date: String
     let created_by: String
-    let sessions: [SessionDTO]
+    let sessions: [SessionEntryDTO]
 }
 
-struct SessionDTO: Codable {
-    let id: Int
+struct SessionEntryDTO: Codable {
+    let id: String
     let user_id: String
     let starting_amount: Double
     let ending_amount: Double

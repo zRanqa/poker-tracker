@@ -8,9 +8,10 @@
 import Foundation
 
 struct GroupMember: Identifiable {
-    var id: String
+    var id: UUID
     var name: String
     var email: String?
+    var role: String?
     
     var isGuest: Bool {
         email == nil
@@ -19,11 +20,11 @@ struct GroupMember: Identifiable {
 
 
 func getTestGroupMember() -> GroupMember {
-    return GroupMember(id: UUID().uuidString, name: "Test Member", email: "test@example.com")
+    return GroupMember(id: UUID(), name: "Test Member", email: "test@example.com", role: "leader")
 }
 
 func getTestGuestMember() -> GroupMember {
-    return GroupMember(id: UUID().uuidString, name: "Test Guest", email: nil)
+    return GroupMember(id: UUID(), name: "Test Guest", email: nil)
 }
 
 func getRandomGroupMember() -> GroupMember {
