@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SessionsTab: View {
     
-    @State var groupSessions: [PokerSession] = []
+    @Binding var groupSessions: [PokerSession]
     
     var body: some View {
         ScrollView {
@@ -23,14 +23,16 @@ struct SessionsTab: View {
             .padding(.bottom, 20)
             .padding(.horizontal, 10)
         }
-        
-        .onAppear() {
-            groupSessions = [getTestPokerSession(), getTestPokerSession(), getTestPokerSession(), getTestPokerSession()]
-        }
     }
-        
+}
+
+struct SessionsTabPreview: View {
+    @State var groupSessions = [getTestPokerSession(id: 1), getTestPokerSession(id: 2), getTestPokerSession(id: 3), getTestPokerSession(id: 4)]
+    var body: some View {
+        SessionsTab(groupSessions: $groupSessions)
+    }
 }
 
 #Preview {
-    SessionsTab()
+    SessionsTabPreview()
 }

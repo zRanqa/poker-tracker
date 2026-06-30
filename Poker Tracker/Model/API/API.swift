@@ -10,6 +10,7 @@ let API_URL = "http://127.0.0.1:5000/api"
 enum APIEndpoints {
     case login
     case getAllGroups
+    case getGroupSessions
 }
 
 
@@ -19,6 +20,7 @@ func getApiUrl(endpoint: APIEndpoints) -> String {
         return "\(API_URL)/login"
     case .getAllGroups:
         return "\(API_URL)/get-user-groups"
-        
+    case .getGroupSessions:
+        return "\(API_URL)/get-group-sessions"
     }
 }

@@ -8,14 +8,14 @@
 import Foundation
 
 struct SessionEntry: Identifiable {
-    var id: String
-    var groupMember: GroupMember
+    var id: Int
+    var groupMemberId: UUID
     
     var startAmount: Double
     var endAmount: Double
     var buyIns: Int
 }
 
-func getTestSessionEntry() -> SessionEntry {
-    return SessionEntry(id: UUID().uuidString, groupMember: getRandomGroupMember(), startAmount: 20.0, endAmount: Double(Int.random(in: 0...60)) / 2.0 + 10, buyIns: Int.random(in: 0...2))
+func getTestSessionEntry(id: Int = 1) -> SessionEntry {
+    return SessionEntry(id: id, groupMemberId: UUID(), startAmount: 20.0, endAmount: Double(Int.random(in: 0...60)) / 2.0 + 10, buyIns: Int.random(in: 0...2))
 }

@@ -34,6 +34,7 @@ class LoginSignupFormViewModel {
             
         } catch {
             print(error)
+            return "Error with server"
         }
         return ""
     }

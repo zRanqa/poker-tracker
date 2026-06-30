@@ -25,6 +25,8 @@ struct NewNightTab: View {
 //        PlayerNightEntry(id: "5", name: "Player 5", startAmount: 20, endAmount: 0, buyIns: 0)
 //    ]
     
+    @State var idNumber: Int = 0 // this is for the new session entrys
+    
     var sortedSessionEntries: [SessionEntry] {
         sessionEntries.sorted {
             ($0.endAmount - $0.startAmount) >
@@ -34,7 +36,7 @@ struct NewNightTab: View {
     
     func saveNight() {
         // CHECK IF NIGHT VALID
-        
+        idNumber = 0 // reset back to 0 after saving the night
     }
     
     var body: some View {
@@ -79,7 +81,7 @@ struct NewNightTab: View {
         }
         .padding(.horizontal, 10)
         .sheet(isPresented: $showingAddPlayer) {
-            AddEntryToSessionView { newEntry in
+            AddEntryToSessionView(idNumber: $idNumber) { newEntry in
                 sessionEntries.append(newEntry)
             }
         }

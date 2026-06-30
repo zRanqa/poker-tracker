@@ -25,6 +25,7 @@ func formatMoney(double: Double) -> String {
 
 struct TotalEarningsChart: View {
     @Binding var selectedYear: String
+    var groupId: Int
     
     @State var playerTotals: [PlayerTotals] = [
         PlayerTotals(id: "1", name: "Bob", totalMoney: 20.0),
@@ -103,7 +104,7 @@ struct TotalEarningsChartPreview: View {
     @State var selectedYear: String = "2025"
     
     var body: some View {
-        TotalEarningsChart(selectedYear: $selectedYear)
+        TotalEarningsChart(selectedYear: $selectedYear, groupId: -1)
     }
 }
 

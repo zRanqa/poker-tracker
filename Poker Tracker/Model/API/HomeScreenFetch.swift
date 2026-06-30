@@ -14,7 +14,7 @@ func fetchGroups(token: String) async throws -> [PokerGroup] {
     }
     
     var request = URLRequest(url: url)
-    request.httpMethod = "POST"
+    request.httpMethod = "GET"
     request.setValue("application/json", forHTTPHeaderField: "Content-Type")
     request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
     

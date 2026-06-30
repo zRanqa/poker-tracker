@@ -16,17 +16,19 @@ import SwiftUI
 
 struct GroupScreen: View {
     @Environment(\.colorScheme) var colorScheme
+    @EnvironmentObject var appState: AppState
     
     var onNavigate: (AppScreen) -> Void
     
-    var group: PokerGroup
+    @State var group: PokerGroup
     
     let lightColor = Color(red: 0.85, green: 0.85, blue: 0.85)
     let darkColor = Color(red: 0.20, green: 0.20, blue: 0.20)
     
     @State var selectedYear: String = "All"
-    
     @State private var selectedTab = 0
+    
+    var vm = GroupScreenViewModel()
     
     var body: some View {
         
@@ -56,7 +58,7 @@ struct GroupScreen: View {
             
             ScrollView {
                 VStack {
-                    TotalEarningsChart(selectedYear: $selectedYear)
+                    TotalEarningsChart(selectedYear: $selectedYear, groupId: group.id)
                         .padding(.bottom, 10)
                     
                         
@@ -77,13 +79,16 @@ struct GroupScreen: View {
                         PlayersTab()
                     }
                     else if selectedTab == GroupTabs.sessions.rawValue  {
-                        SessionsTab()
+                        SessionsTab(groupSessions: $group.pokerSessions)
                     }
                     else if selectedTab == GroupTabs.newNight.rawValue  {
                         NewNightTab(onNavigate: onNavigate)
                     }
                     
                 }
+            }
+            .task {
+                group = await vm.getGroupDetails(token: appState.token ?? "", group: group)
             }
         }
         .edgesIgnoringSafeArea(.bottom)

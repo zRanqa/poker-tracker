@@ -8,22 +8,22 @@
 import Foundation
 
 struct PokerSession {
-    var id: String
+    var id: Int
     var date: Date
     var sessionEntries: [SessionEntry]
 }
 
 
-func getTestPokerSession() -> PokerSession {
+func getTestPokerSession(id: Int = 1) -> PokerSession {
     return PokerSession(
-        id: UUID().uuidString,
+        id: id,
         date: Date(),
         sessionEntries: [
-            getTestSessionEntry(),
-            getTestSessionEntry(),
-            getTestSessionEntry(),
-            getTestSessionEntry(),
-            getTestSessionEntry()
+            getTestSessionEntry(id: 1),
+            getTestSessionEntry(id: 2),
+            getTestSessionEntry(id: 3),
+            getTestSessionEntry(id: 4),
+            getTestSessionEntry(id: 5)
         ]
     )
 }
