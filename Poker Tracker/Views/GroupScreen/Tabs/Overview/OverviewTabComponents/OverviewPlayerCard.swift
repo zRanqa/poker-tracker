@@ -84,5 +84,5 @@ struct OverviewPlayerCard: View {
 }
 
 #Preview {
-    OverviewPlayerCard(playerTotals: PlayerTotals(id: "1", name: "Bob", totalMoney: 20.0), onNavigate: { _ in})
+    OverviewPlayerCard(playerTotals: PlayerTotals(id: UUID(), name: "Bob", totalMoney: 20.0), onNavigate: { _ in})
 }

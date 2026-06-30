@@ -58,7 +58,7 @@ struct GroupScreen: View {
             
             ScrollView {
                 VStack {
-                    TotalEarningsChart(selectedYear: $selectedYear, groupId: group.id)
+                    TotalEarningsChart(selectedYear: $selectedYear, playerTotals: $group.playerTotals)
                         .padding(.bottom, 10)
                     
                         
@@ -76,7 +76,7 @@ struct GroupScreen: View {
                         OverviewTab(onNavigate: onNavigate)
                     }
                     else if selectedTab == GroupTabs.players.rawValue {
-                        PlayersTab()
+                        PlayersTab(playerTotals: $group.playerTotals)
                     }
                     else if selectedTab == GroupTabs.sessions.rawValue  {
                         SessionsTab(groupSessions: $group.pokerSessions)

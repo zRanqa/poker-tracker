@@ -14,9 +14,9 @@ struct OverviewTab: View {
     var body: some View {
         HStack {
             Spacer()
-            OverviewPlayerCard(playerTotals: PlayerTotals(id: "1", name: "Bob", totalMoney: 20.0), onNavigate: onNavigate)
+            OverviewPlayerCard(playerTotals: PlayerTotals(id: UUID(), name: "Bob", totalMoney: 20.0), onNavigate: onNavigate)
             Spacer()
-            OverviewPlayerCard(playerTotals: PlayerTotals(id: "2", name: "jimmy", totalMoney: -20.0), onNavigate: onNavigate)
+            OverviewPlayerCard(playerTotals: PlayerTotals(id: UUID(), name: "jimmy", totalMoney: -20.0), onNavigate: onNavigate)
             Spacer()
         }
     }

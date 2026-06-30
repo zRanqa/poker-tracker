@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct PlayerValueDisplay: View {
+    @Binding var selectedFilter: String
     var playerTotals: PlayerTotals
 
     var body: some View {
@@ -20,7 +21,7 @@ struct PlayerValueDisplay: View {
 
                 Spacer()
 
-                Text(playerTotals.winPercentage.description)
+                Text(playerTotals.value(for: selectedFilter))
                     .font(.body)
                     .foregroundStyle(.secondary)
 
@@ -37,6 +38,15 @@ struct PlayerValueDisplay: View {
     }
 }
 
+struct PlayerValueDisplayPreview: View {
+    
+    @State var selectedFilter: String = "Total Money"
+    
+    var body: some View {
+        PlayerValueDisplay(selectedFilter: $selectedFilter,playerTotals: PlayerTotals(id: UUID(), name: "bob", totalMoney: 20.0))
+    }
+}
+
 #Preview {
-    PlayerValueDisplay(playerTotals: PlayerTotals(id: "3", name: "bob", totalMoney: 20.0))
+    PlayerValueDisplayPreview()
 }

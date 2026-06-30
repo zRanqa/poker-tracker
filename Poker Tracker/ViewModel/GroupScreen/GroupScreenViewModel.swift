@@ -20,16 +20,13 @@ class GroupScreenViewModel {
             
             // get sessions
             newGroup.pokerSessions = try await fetchGroupSessions(token: token, groupId: group.id, groupMembers: newGroup.groupMembers)
-            print(newGroup.groupMembers.count)
+            
+            // calculate totals
+            newGroup.playerTotals = calculateTotals(pokerGroup: newGroup)
         } catch {
             print("error at groupScreenViewModel")
             print(error)
         }
         
         return newGroup
-    }
-    
-    func getPlayerTotals(group: PokerGroup) -> [PlayerTotals] {
-        return []
-    }
-}
+    }}

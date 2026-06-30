@@ -10,7 +10,20 @@ import SwiftUI
 struct FilterDropdownView: View {
     @Environment(\.colorScheme) var colorScheme
     
-    var filters: [String] = ["Win Percentage", "Loss Percentage", "Buy Ins"]
+    var filters: [String] = [
+        "Buy Ins",
+        "Total Money",
+        "Total Games",
+        "Total Wins",
+        "Total Losses",
+        "Win Percentage",
+        "Loss Percentage",
+        "Win Streak",
+        "Loss Streak",
+        "Most Money Won",
+        "Most Money Lost"
+    ]
+    
     @Binding var selectedFilter: String
     
     var body: some View {

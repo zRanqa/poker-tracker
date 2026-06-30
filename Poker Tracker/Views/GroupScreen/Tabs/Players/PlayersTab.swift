@@ -10,6 +10,8 @@ import SwiftUI
 struct PlayersTab: View {
     @Environment(\.colorScheme) var colorScheme
     
+    @Binding var playerTotals: [PlayerTotals]
+    
     @State var selectedFilter: String = "Win Percentage"
     
     var body: some View {
@@ -21,8 +23,11 @@ struct PlayersTab: View {
                 }
                 
                 VStack {
-                    ForEach(0...10, id: \.self) { i in
-                        PlayerValueDisplay(playerTotals: PlayerTotals(id: "\(i)", name: "Player \(i)", totalMoney: 20))
+                    ForEach(playerTotals, id: \.id) { playerTotal in
+                        PlayerValueDisplay(
+                            selectedFilter: $selectedFilter,
+                            playerTotals: playerTotal
+                        )
                         
                         Divider()
                             .padding(.leading, 16)
@@ -38,6 +43,13 @@ struct PlayersTab: View {
     }
 }
 
+struct PlayersTabPreview: View {
+    @State var playerTotals: [PlayerTotals] = []
+    var body: some View {
+        PlayersTab(playerTotals: $playerTotals)
+    }
+}
+
 #Preview {
-    PlayersTab()
+    PlayersTabPreview()
 }

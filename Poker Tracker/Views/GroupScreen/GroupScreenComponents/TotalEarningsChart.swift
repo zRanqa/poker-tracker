@@ -8,15 +8,6 @@
 import SwiftUI
 import Charts
 
-struct PlayerTotals: Identifiable {
-    var id: String
-    var name: String
-    var totalMoney: Double
-    var winPercentage: Double = 50.0
-    var winStreak: Int = 4
-    var buyIns: Int = 2
-}
-
 func formatMoney(double: Double) -> String {
     let Formatter = NumberFormatter()
     Formatter.numberStyle = .currency
@@ -25,19 +16,8 @@ func formatMoney(double: Double) -> String {
 
 struct TotalEarningsChart: View {
     @Binding var selectedYear: String
-    var groupId: Int
+    @Binding var playerTotals: [PlayerTotals]
     
-    @State var playerTotals: [PlayerTotals] = [
-        PlayerTotals(id: "1", name: "Bob", totalMoney: 20.0),
-        PlayerTotals(id: "3", name: "bo", totalMoney: 10.0),
-        PlayerTotals(id: "4", name: "Bo", totalMoney: -10.0),
-        PlayerTotals(id: "4", name: "Bos", totalMoney: -10.0),
-        PlayerTotals(id: "4", name: "Bod", totalMoney: -10.0),
-        PlayerTotals(id: "4", name: "Bof", totalMoney: -10.0),
-        PlayerTotals(id: "4", name: "Boe", totalMoney: -10.0),
-        PlayerTotals(id: "4", name: "Boo", totalMoney: -10.0),
-        PlayerTotals(id: "2", name: "Jimmy", totalMoney: -20.0)
-    ]
     @State var showedTotals: [PlayerTotals] = []
     
     private let barWidth: CGFloat = 60
@@ -69,8 +49,10 @@ struct TotalEarningsChart: View {
         .onAppear {
             updateData(for: selectedYear)
         }
-        
         .onChange(of: selectedYear) {
+            updateData(for: selectedYear)
+        }
+        .onChange(of: playerTotals) {
             updateData(for: selectedYear)
         }
 
@@ -102,9 +84,20 @@ struct TotalEarningsChart: View {
 struct TotalEarningsChartPreview: View {
     
     @State var selectedYear: String = "2025"
+    @State var playerTotals: [PlayerTotals] = [
+            PlayerTotals(id: UUID(), name: "Bob", totalMoney: 20.0),
+            PlayerTotals(id: UUID(), name: "bo", totalMoney: 10.0),
+            PlayerTotals(id: UUID(), name: "Bo", totalMoney: -10.0),
+            PlayerTotals(id: UUID(), name: "Bos", totalMoney: -10.0),
+            PlayerTotals(id: UUID(), name: "Bod", totalMoney: -10.0),
+            PlayerTotals(id: UUID(), name: "Bof", totalMoney: -10.0),
+            PlayerTotals(id: UUID(), name: "Boe", totalMoney: -10.0),
+            PlayerTotals(id: UUID(), name: "Boo", totalMoney: -10.0),
+            PlayerTotals(id: UUID(), name: "Jimmy", totalMoney: -20.0)
+        ]
     
     var body: some View {
-        TotalEarningsChart(selectedYear: $selectedYear, groupId: -1)
+        TotalEarningsChart(selectedYear: $selectedYear, playerTotals: $playerTotals)
     }
 }
 

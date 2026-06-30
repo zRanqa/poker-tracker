@@ -14,6 +14,7 @@ struct PokerGroup: Identifiable {
     var color: Color
     var pokerSessions: [PokerSession] = []
     var groupMembers: [GroupMember] = []
+    var playerTotals: [PlayerTotals] = []
 }
 
 
