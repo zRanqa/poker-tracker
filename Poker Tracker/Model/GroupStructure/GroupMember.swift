@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct GroupMember: Identifiable {
+struct GroupMember: Identifiable, Hashable {
     var id: UUID
     var name: String
     var email: String?

@@ -7,13 +7,22 @@
 
 import Foundation
 
-struct SessionEntry: Identifiable {
+struct SessionEntry: Identifiable, Equatable {
     var id: String
     var groupMember: GroupMember
     
     var startAmount: Double
     var endAmount: Double
     var buyIns: Int
+    
+    func toDict() -> [String: Any] {
+        return [
+            "id": groupMember.id.uuidString,
+            "starting_amount": startAmount,
+            "ending_amount": endAmount,
+            "buy_ins": buyIns
+        ]
+    }
 }
 
 func getTestSessionEntry(id: Int = 1) -> SessionEntry {

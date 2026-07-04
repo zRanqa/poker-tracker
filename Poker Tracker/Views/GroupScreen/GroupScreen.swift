@@ -30,6 +30,12 @@ struct GroupScreen: View {
     
     var vm = GroupScreenViewModel()
     
+    func loadGroup() {
+        Task {
+            group = await vm.getGroupDetails(token: appState.token ?? "", group: group)
+        }
+    }
+    
     var body: some View {
         
         VStack {
@@ -82,13 +88,13 @@ struct GroupScreen: View {
                         SessionsTab(groupSessions: $group.pokerSessions)
                     }
                     else if selectedTab == GroupTabs.newNight.rawValue  {
-                        NewNightTab(onNavigate: onNavigate)
+                        NewNightTab(onNavigate: onNavigate, groupId: group.id, groupMembers: group.groupMembers, loadGroup: loadGroup)
                     }
                     
                 }
             }
             .task {
-                group = await vm.getGroupDetails(token: appState.token ?? "", group: group)
+                loadGroup()
             }
         }
         .edgesIgnoringSafeArea(.bottom)

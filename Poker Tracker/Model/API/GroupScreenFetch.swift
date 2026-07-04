@@ -79,3 +79,36 @@ func fetchGroupMembers(token: String, groupId: Int) async throws -> [GroupMember
     
     return groupMembers
 }
+
+
+func createPokerSession(token: String, groupId: Int, pokerSession: PokerSession) async throws -> CreatePokerSessionResponse {
+    guard let url = URL(string: getApiUrl(endpoint: .addNewPokerNight)) else {
+        return CreatePokerSessionResponse(status: "error", message: "Error getting URL")
+    }
+    
+    let formatter = DateFormatter()
+    formatter.dateFormat = "yyyy-MM-dd"
+    
+    
+    var request = URLRequest(url: url)
+    request.httpMethod = "POST"
+    request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+    request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+    
+    request.httpBody = try JSONEncoder().encode(CreatePokerSessionRequest(
+        group_id: groupId,
+        date: formatter.string(from: pokerSession.date),
+        night_entries: pokerSession.sessionEntries.map { NightEntryRequest(
+            id: $0.groupMember.id.uuidString,
+            starting_amount: $0.startAmount,
+            ending_amount: $0.endAmount,
+            buy_ins: $0.buyIns
+        )}
+    ))
+    
+    let (data, _) = try await URLSession.shared.data(for: request)
+    let createPokerSessionResponse = try JSONDecoder().decode(CreatePokerSessionResponse.self, from: data)
+    
+    return createPokerSessionResponse
+    
+}

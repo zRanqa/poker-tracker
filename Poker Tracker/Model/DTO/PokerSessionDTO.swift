@@ -25,3 +25,22 @@ struct PokerSessionsResponse: Codable {
     let message: String
     let data: [PokerSessionDTO]
 }
+
+
+struct CreatePokerSessionRequest: Encodable {
+    let group_id: Int
+    let date: String
+    let night_entries: [NightEntryRequest]
+}
+
+struct NightEntryRequest: Encodable {
+    let id: String
+    let starting_amount: Double
+    let ending_amount: Double
+    let buy_ins: Int
+}
+
+struct CreatePokerSessionResponse: Codable {
+    let status: String
+    let message: String
+}

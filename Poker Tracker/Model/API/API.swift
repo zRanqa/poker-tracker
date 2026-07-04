@@ -12,6 +12,7 @@ enum APIEndpoints {
     case getAllGroups
     case getGroupSessions
     case getGroupMembers
+    case addNewPokerNight
 }
 
 
@@ -25,5 +26,7 @@ func getApiUrl(endpoint: APIEndpoints) -> String {
         return "\(API_URL)/get-group-sessions"
     case .getGroupMembers:
         return "\(API_URL)/get-group-members"
+    case .addNewPokerNight:
+        return "\(API_URL)/add-poker-night"
     }
 }

@@ -10,11 +10,14 @@ import SwiftUI
 struct SessionsTab: View {
     
     @Binding var groupSessions: [PokerSession]
+    var sortedGroupSessions: [PokerSession] {
+        groupSessions.sorted { $0.date > $1.date }
+    }
     
     var body: some View {
         ScrollView {
             VStack(alignment: .leading) {
-                ForEach(groupSessions, id: \.id) { pokerSession in
+                ForEach(sortedGroupSessions, id: \.id) { pokerSession in
                     SessionView(pokerSession: pokerSession)
                 }
                 

@@ -27,19 +27,7 @@ struct RootView: View {
                     onNavigate: { screen in appState.currentScreen = screen },
                     group: group
                 )
-                
-                //                HomeScreen(
-                //                    onNavigate: { screen in appState.currentScreen = screen }
-                //                )
             }
-            //        .onAppear() {
-            //            for player in playerEntries {
-            //                context.delete(player)
-            //            }
-            //            for date in savedDates {
-            //                context.delete(date)
-            //            }
-            //       }
         }
     }
 }

@@ -8,25 +8,26 @@
 import SwiftUI
 
 struct NewNightTab: View {
-    
+    @EnvironmentObject var appState: AppState
     
     var onNavigate: (AppScreen) -> Void
+    var groupId: Int
+    var groupMembers: [GroupMember]
+    var loadGroup: () -> Void
     
-    @State var nightDate: Date = Date()
+    var filteredGroupMembers: [GroupMember] {
+        groupMembers.filter { member in
+            !sessionEntries.contains { $0.groupMember.id == member.id }
+        }
+    }
     
-    @State var showingAddPlayer = false
+    @State private var errorMessage: String = ""
+    @State private var nightDate: Date = Date()
+    @State private var showingAddPlayer = false
+    @State private var idNumber: Int = 0 // this is for the new session entrys
     
+    @State private var selectedSessionEntry: SessionEntry?
     @State var sessionEntries: [SessionEntry] = []
-//    @State var playerNightEntries: [PlayerNightEntry] = [
-//        PlayerNightEntry(id: "1", name: "Player 1", startAmount: 20, endAmount: 40, buyIns: 0),
-//        PlayerNightEntry(id: "2", name: "Player 2", startAmount: 20, endAmount: 30, buyIns: 0),
-//        PlayerNightEntry(id: "3", name: "Player 3", startAmount: 20, endAmount: 20, buyIns: 0),
-//        PlayerNightEntry(id: "4", name: "Player 4", startAmount: 20, endAmount: 10, buyIns: 0),
-//        PlayerNightEntry(id: "5", name: "Player 5", startAmount: 20, endAmount: 0, buyIns: 0)
-//    ]
-    
-    @State var idNumber: Int = 0 // this is for the new session entrys
-    
     var sortedSessionEntries: [SessionEntry] {
         sessionEntries.sorted {
             ($0.endAmount - $0.startAmount) >
@@ -34,9 +35,43 @@ struct NewNightTab: View {
         }
     }
     
-    func saveNight() {
+    var vm = NewNightTabViewModel()
+    
+    func saveNight() async {
         // CHECK IF NIGHT VALID
-        idNumber = 0 // reset back to 0 after saving the night
+        if sessionEntries.count < 2 {
+            errorMessage = "Please add at least two players"
+            return
+        }
+        
+        
+        var total = 0.0
+        for sessionEntry in sessionEntries {
+            total += (sessionEntry.endAmount - sessionEntry.startAmount)
+        }
+        if total != 0 {
+            errorMessage = "Values are not balanced: $\(total)"
+            return
+        }
+        
+        if nightDate > Date() {
+            errorMessage = "Cannot create a night in the future"
+            return
+        }
+        
+        errorMessage = ""
+        
+        let pokerSession = PokerSession(id: -1, date: nightDate, sessionEntries: sessionEntries)
+        let response = await vm.saveNight(token: appState.token ?? "", groupId: groupId, pokerSession: pokerSession)
+        if response.status == "error" {
+            errorMessage = response.message
+        }
+        else {
+            idNumber = 0 // reset back to 0 after saving the night
+            sessionEntries = []
+            nightDate = Date()
+            loadGroup()
+        }
     }
     
     var body: some View {
@@ -52,11 +87,18 @@ struct NewNightTab: View {
                 .padding(.bottom, 5)
                 VStack(spacing: 5) {
                     ForEach(sortedSessionEntries) { sessionEntry in
-                        PlayerNightRow(sessionEntry: sessionEntry)
+                        Button(action: {
+                            selectedSessionEntry = sessionEntry
+                            showingAddPlayer = true
+                        }) {
+                            PlayerNightRow(sessionEntry: sessionEntry)
+                        }
+                        .buttonStyle(.plain)
                     }
                 }
                 
                 Button(action: {
+                    selectedSessionEntry = nil
                     showingAddPlayer = true
                     
                 }) {
@@ -76,18 +118,41 @@ struct NewNightTab: View {
             }
             Spacer()
             
-            SaveNightButton(onTap: saveNight)
+            if !errorMessage.isEmpty {
+                Text(errorMessage)
+                    .foregroundStyle(.red)
+            }
+            
+            SaveNightButton(onTap: {
+                Task {
+                    await saveNight()
+                }
+            })
             
         }
         .padding(.horizontal, 10)
         .sheet(isPresented: $showingAddPlayer) {
-            AddEntryToSessionView(idNumber: $idNumber) { newEntry in
-                sessionEntries.append(newEntry)
-            }
+            AddEntryToSessionView(
+                idNumber: $idNumber,
+                groupMembers: filteredGroupMembers,
+                sessionEntry: selectedSessionEntry,
+                onSave: { entry in
+                    if let index = sessionEntries.firstIndex(where: { $0.id == entry.id }) {
+                        sessionEntries[index] = entry
+                    } else {
+                        sessionEntries.append(entry)
+                    }
+                },
+                onDelete: { entry in
+                    sessionEntries.removeAll { $0.id == entry.id }
+                }
+            )
         }
     }
 }
 
 #Preview {
-    NewNightTab(onNavigate: {_ in})
+    NewNightTab(onNavigate: {_ in}, groupId: 1, groupMembers: [
+        GroupMember(id: UUID(), name: "Player 1"),
+        GroupMember(id: UUID(), name: "Player 2")], loadGroup: {})
 }
