@@ -17,3 +17,9 @@ struct PokerGroupsResponse: Codable {
     let message: String
     let data: [PokerGroupDTO]
 }
+
+
+struct UpdateGroupNameRequest: Codable {
+    let group_id: Int
+    let name: String
+}

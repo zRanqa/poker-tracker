@@ -20,12 +20,6 @@ struct GroupMemberResponse: Codable {
     let data: [GroupMemberDTO]
 }
 
-
-struct AddGroupMemberResponse: Codable {
-    let status: String
-    let message: String
-}
-
 struct AddGroupMemberRequest: Encodable {
     let group_id: Int
     let email: String

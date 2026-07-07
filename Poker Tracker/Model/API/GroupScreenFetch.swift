@@ -81,9 +81,9 @@ func fetchGroupMembers(token: String, groupId: Int) async throws -> [GroupMember
 }
 
 
-func createPokerSession(token: String, groupId: Int, pokerSession: PokerSession) async throws -> CreatePokerSessionResponse {
+func createPokerSession(token: String, groupId: Int, pokerSession: PokerSession) async throws -> GenericResponse {
     guard let url = URL(string: getApiUrl(endpoint: .addNewPokerNight)) else {
-        return CreatePokerSessionResponse(status: "error", message: "Error getting URL")
+        return GenericResponse(status: "error", message: "Error getting URL")
     }
     
     let formatter = DateFormatter()
@@ -107,16 +107,16 @@ func createPokerSession(token: String, groupId: Int, pokerSession: PokerSession)
     ))
     
     let (data, _) = try await URLSession.shared.data(for: request)
-    let createPokerSessionResponse = try JSONDecoder().decode(CreatePokerSessionResponse.self, from: data)
+    let createPokerSessionResponse = try JSONDecoder().decode(GenericResponse.self, from: data)
     
     return createPokerSessionResponse
     
 }
 
 
-func addGroupMemberToGroup(token: String, groupId: Int, email: String) async throws -> AddGroupMemberResponse {
+func addGroupMemberToGroup(token: String, groupId: Int, email: String) async throws -> GenericResponse {
     guard let url = URL(string: getApiUrl(endpoint: .addNewGroupMember)) else {
-        return AddGroupMemberResponse(status: "error", message: "Error getting URL")
+        return GenericResponse(status: "error", message: "Error getting URL")
     }
 
     
@@ -130,14 +130,14 @@ func addGroupMemberToGroup(token: String, groupId: Int, email: String) async thr
     )
     
     let (data, _) = try await URLSession.shared.data(for: request)
-    let response = try JSONDecoder().decode(AddGroupMemberResponse.self, from: data)
+    let response = try JSONDecoder().decode(GenericResponse.self, from: data)
     
     return response
 }
 
-func addGuestMemberToGroup(token: String, groupId: Int, name: String) async throws -> AddGroupMemberResponse {
+func addGuestMemberToGroup(token: String, groupId: Int, name: String) async throws -> GenericResponse {
     guard let url = URL(string: getApiUrl(endpoint: .addNewGuestMember)) else {
-        return AddGroupMemberResponse(status: "error", message: "Error getting URL")
+        return GenericResponse(status: "error", message: "Error getting URL")
     }
     
     var request = URLRequest(url: url)
@@ -149,7 +149,27 @@ func addGuestMemberToGroup(token: String, groupId: Int, name: String) async thro
     )
     
     let (data, _) = try await URLSession.shared.data(for: request)
-    let response = try JSONDecoder().decode(AddGroupMemberResponse.self, from: data)
+    let response = try JSONDecoder().decode(GenericResponse.self, from: data)
+    
+    return response
+}
+
+
+func updateGroupNameDB(token: String, groupId: Int, name: String) async throws -> GenericResponse {
+    guard let url = URL(string: getApiUrl(endpoint: .updateGroupName)) else {
+        return GenericResponse(status: "error", message: "Error getting URL")
+    }
+    
+    var request = URLRequest(url: url)
+    request.httpMethod = "PUT"
+    request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+    request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+    request.httpBody = try JSONEncoder().encode(
+        UpdateGroupNameRequest(group_id: groupId, name: name)
+    )
+    
+    let (data, _) = try await URLSession.shared.data(for: request)
+    let response = try JSONDecoder().decode(GenericResponse.self, from: data)
     
     return response
 }

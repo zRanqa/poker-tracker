@@ -42,6 +42,10 @@ struct InviteNewUserView: View {
                     Button(action: {
                         Task {
                             errorMessage = await vm.addUser(token: appState.token ?? "", groupId: appState.groupId ?? 0, email: newUser)
+                            if errorMessage == "" {
+                                loadGroup()
+                                dismiss()
+                            }
                         }
                     }) {
                         Text("Invite")

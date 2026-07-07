@@ -9,6 +9,7 @@ import SwiftUI
 
 struct GroupSettingsView: View {
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject var appState: AppState
     
     @Binding var group: PokerGroup
     var loadGroup: () -> Void
@@ -26,13 +27,14 @@ struct GroupSettingsView: View {
         group.groupMembers.filter{ $0.isGuest == true }
     }
     
+    var vm = GroupSettingsViewModel()
+    
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack() {
                     HStack {
                         if editingGroupName {
-                            
                             TextField("Group Name", text: $newGroupName)
                                 .font(.title)
                                 .padding(2)
@@ -45,7 +47,12 @@ struct GroupSettingsView: View {
                         Spacer()
                         Button(action: {
                             if editingGroupName {
-                                group.name = newGroupName
+                                Task {
+                                    let status = await vm.updateGroupName(token: appState.token ?? "", groupId: appState.groupId ?? 0, name: newGroupName)
+                                    if status == "success" {
+                                        group.name = newGroupName
+                                    }
+                                }
                             }
                             else {
                                 newGroupName = group.name

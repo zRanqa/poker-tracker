@@ -40,7 +40,3 @@ struct NightEntryRequest: Encodable {
     let buy_ins: Int
 }
 
-struct CreatePokerSessionResponse: Codable {
-    let status: String
-    let message: String
-}

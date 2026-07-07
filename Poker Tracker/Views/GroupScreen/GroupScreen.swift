@@ -52,7 +52,7 @@ struct GroupScreen: View {
                 Button(action: {
                     showGroupSettingsSheet = true
                 }) {
-                    Image(systemName: "line.3.horizontal")
+                    Image(systemName: "gearshape")
                         .font(.system(size: 30, weight: .bold))
                         .padding(.leading, 20)
                 }
