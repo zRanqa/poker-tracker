@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct HomeGroupSelector: View {
+    @EnvironmentObject var appState: AppState
     
     var onNavigate: (AppScreen) -> Void
     
@@ -15,6 +16,7 @@ struct HomeGroupSelector: View {
     
     var body: some View {
         Button(action: {
+            appState.groupId = group.id
             onNavigate(.groupScreen(group))
         }) {
             VStack(alignment: .leading, spacing: 12) {

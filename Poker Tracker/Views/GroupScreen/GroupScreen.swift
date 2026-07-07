@@ -28,11 +28,18 @@ struct GroupScreen: View {
     @State var selectedYear: String = "All"
     @State private var selectedTab = 0
     
+    @State var showGroupSettingsSheet = false
+    
     var vm = GroupScreenViewModel()
     
     func loadGroup() {
         Task {
-            group = await vm.getGroupDetails(token: appState.token ?? "", group: group)
+            if group.id != -1 { // for testing purposes
+                group = await vm.getGroupDetails(token: appState.token ?? "", group: group)
+            }
+            else {
+                group.playerTotals = calculateTotals(pokerGroup: group)
+            }
         }
     }
     
@@ -42,9 +49,14 @@ struct GroupScreen: View {
             
             HStack {
                 
-                Image(systemName: "line.3.horizontal")
-                    .font(.system(size: 30, weight: .bold))
-                    .padding(.leading, 20)
+                Button(action: {
+                    showGroupSettingsSheet = true
+                }) {
+                    Image(systemName: "line.3.horizontal")
+                        .font(.system(size: 30, weight: .bold))
+                        .padding(.leading, 20)
+                }
+                .buttonStyle(.plain)
                 
                 Spacer()
                 
@@ -96,11 +108,16 @@ struct GroupScreen: View {
             .task {
                 loadGroup()
             }
+            Spacer()
+            BottomBarView(onNavigate: onNavigate)
         }
         .edgesIgnoringSafeArea(.bottom)
+        .fullScreenCover(isPresented: $showGroupSettingsSheet) {
+            GroupSettingsView(group: $group, loadGroup: loadGroup)
+        }
     }
 }
 
 #Preview {
-    GroupScreen(onNavigate: {_ in }, group: PokerGroup(id: 1, name: "Test Group", color: Color(red: 0.5, green: 0.5, blue: 0.5)))
+    GroupScreen(onNavigate: {_ in }, group: getTestGroup())
 }

@@ -19,3 +19,21 @@ struct GroupMemberResponse: Codable {
     let message: String
     let data: [GroupMemberDTO]
 }
+
+
+struct AddGroupMemberResponse: Codable {
+    let status: String
+    let message: String
+}
+
+struct AddGroupMemberRequest: Encodable {
+    let group_id: Int
+    let email: String
+}
+
+struct AddGuestMemberRequest: Encodable {
+    let group_id: Int
+    let name: String
+    let id: UUID
+}
+

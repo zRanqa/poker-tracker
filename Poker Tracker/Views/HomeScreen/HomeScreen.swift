@@ -44,11 +44,13 @@ struct HomeScreen: View {
                 .padding(.horizontal)
             }
             Spacer()
-                
+            BottomBarView(onNavigate: onNavigate)
         }
         .task {
             groups = await vm.getGroups(token: appState.token ?? "")
+            groups.append(getTestGroup())
         }
+        .edgesIgnoringSafeArea(.bottom)
     }
 }
 

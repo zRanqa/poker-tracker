@@ -10,6 +10,7 @@ import Foundation
 class AppState: ObservableObject {
     @Published var currentScreen: AppScreen = .loginScreen
     @Published var token: String? = nil
+    @Published var groupId: Int? = nil
 
     var isLoggedIn: Bool {
         token != nil

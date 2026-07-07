@@ -112,3 +112,44 @@ func createPokerSession(token: String, groupId: Int, pokerSession: PokerSession)
     return createPokerSessionResponse
     
 }
+
+
+func addGroupMemberToGroup(token: String, groupId: Int, email: String) async throws -> AddGroupMemberResponse {
+    guard let url = URL(string: getApiUrl(endpoint: .addNewGroupMember)) else {
+        return AddGroupMemberResponse(status: "error", message: "Error getting URL")
+    }
+
+    
+    
+    var request = URLRequest(url: url)
+    request.httpMethod = "POST"
+    request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+    request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+    request.httpBody = try JSONEncoder().encode(
+        AddGroupMemberRequest(group_id: groupId, email: email)
+    )
+    
+    let (data, _) = try await URLSession.shared.data(for: request)
+    let response = try JSONDecoder().decode(AddGroupMemberResponse.self, from: data)
+    
+    return response
+}
+
+func addGuestMemberToGroup(token: String, groupId: Int, name: String) async throws -> AddGroupMemberResponse {
+    guard let url = URL(string: getApiUrl(endpoint: .addNewGuestMember)) else {
+        return AddGroupMemberResponse(status: "error", message: "Error getting URL")
+    }
+    
+    var request = URLRequest(url: url)
+    request.httpMethod = "POST"
+    request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+    request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+    request.httpBody = try JSONEncoder().encode(
+        AddGuestMemberRequest(group_id: groupId, name: name, id: UUID())
+    )
+    
+    let (data, _) = try await URLSession.shared.data(for: request)
+    let response = try JSONDecoder().decode(AddGroupMemberResponse.self, from: data)
+    
+    return response
+}

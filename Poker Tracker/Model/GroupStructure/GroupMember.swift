@@ -20,7 +20,8 @@ struct GroupMember: Identifiable, Hashable {
 
 
 func getTestGroupMember() -> GroupMember {
-    return GroupMember(id: UUID(), name: "Test Member", email: "test@example.com", role: "leader")
+    let randomRole: String = ["leader", "moderator", "member"].randomElement()!
+    return GroupMember(id: UUID(), name: "Test Member", email: "test@example.com", role: randomRole)
 }
 
 func getTestGuestMember() -> GroupMember {
