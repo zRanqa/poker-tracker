@@ -18,6 +18,12 @@ class GroupMemberRoleViewModel {
                     return response.message
                 }
             }
+            else {
+                let response = try await GroupScreenAPI.removeUserFromGroup(token: token, groupId: groupId, userId: groupMember.id)
+                if response.status == "error" {
+                    return response.message
+                }
+            }
             
             return ""
         } catch {

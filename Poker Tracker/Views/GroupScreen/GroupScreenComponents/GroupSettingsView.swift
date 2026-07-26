@@ -106,7 +106,8 @@ struct GroupSettingsView: View {
                         .fontWeight(.bold)
                         
                         ForEach(groupMembers, id:\.id) { groupMember in
-                            GroupMemberRoleView(groupMember: groupMember, errorMessage: $userErrorMessage, isLeader: true, loadGroup: loadGroup)
+                            GroupMemberRoleView(groupMember: groupMember, errorMessage: $userErrorMessage,
+                                                userRole: appState.getUserRoleInGroup(groupMembers: groupMembers) ?? .member, loadGroup: loadGroup)
                                 .padding(.vertical, 2)
                         }
                         
@@ -119,22 +120,24 @@ struct GroupSettingsView: View {
                             }
                         }
                         
-                        HStack {
-                            Button(action: {
-                                activeSheet = .newUser
-                            }) {
-                                HStack {
-                                    Image(systemName: "plus")
-                                    Text("Add User")
-                                    
+                        if !(appState.getUserRoleInGroup(groupMembers: groupMembers) == .member) {
+                            HStack {
+                                Button(action: {
+                                    activeSheet = .newUser
+                                }) {
+                                    HStack {
+                                        Image(systemName: "plus")
+                                        Text("Add User")
+                                        
+                                    }
+                                    .padding(5)
+                                    .background()
+                                    .cornerRadius(15)
+                                    .shadow(radius: 2)
                                 }
-                                .padding(5)
-                                .background()
-                                .cornerRadius(15)
-                                .shadow(radius: 2)
+                                .buttonStyle(.plain)
+                                Spacer()
                             }
-                            .buttonStyle(.plain)
-                            Spacer()
                         }
                     }
                     .padding(10)
@@ -154,7 +157,7 @@ struct GroupSettingsView: View {
                         .fontWeight(.bold)
                         
                         ForEach(guestMembers, id:\.id) { groupMember in
-                            GroupMemberRoleView(groupMember: groupMember, errorMessage: $guestErrorMessage, isLeader: true, loadGroup: loadGroup, turnGuestIntoUser: turnGuestIntoUser)
+                            GroupMemberRoleView(groupMember: groupMember, errorMessage: $guestErrorMessage, userRole: appState.getUserRoleInGroup(groupMembers: groupMembers) ?? .member, loadGroup: loadGroup, turnGuestIntoUser: turnGuestIntoUser)
                                 .padding(.vertical, 2)
                         }
                         
@@ -167,22 +170,24 @@ struct GroupSettingsView: View {
                             }
                         }
                         
-                        HStack {
-                            Button(action: {
-                                activeSheet = .newGuest
-                            }) {
-                                HStack {
-                                    Image(systemName: "plus")
-                                    Text("Add Guest Member")
-                                    
+                        if !(appState.getUserRoleInGroup(groupMembers: groupMembers) == .member) {
+                            HStack {
+                                Button(action: {
+                                    activeSheet = .newGuest
+                                }) {
+                                    HStack {
+                                        Image(systemName: "plus")
+                                        Text("Add Guest Member")
+                                        
+                                    }
+                                    .padding(5)
+                                    .background()
+                                    .cornerRadius(15)
+                                    .shadow(radius: 2)
                                 }
-                                .padding(5)
-                                .background()
-                                .cornerRadius(15)
-                                .shadow(radius: 2)
+                                .buttonStyle(.plain)
+                                Spacer()
                             }
-                            .buttonStyle(.plain)
-                            Spacer()
                         }
                     }
                     .padding(10)
@@ -198,6 +203,7 @@ struct GroupSettingsView: View {
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) {
                         Button("Close") {
+                            // TODO: Save user roles
                             dismiss()
                         }
                     }

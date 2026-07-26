@@ -15,12 +15,24 @@ class AppState: ObservableObject {
     @Published var accessToken: String? = nil
     @Published var refreshToken: String? = nil
     @Published var groupId: Int? = nil
+    @Published var userId: UUID? = nil
     
     // Tracks the refresh request to stop sending multiple requests
     private var refreshTask: Task<String, Error>? = nil
 
     var isLoggedIn: Bool {
         self.accessToken != nil
+    }
+    
+    func getUserRoleInGroup(groupMembers: [GroupMember]) -> GroupRole? {
+        guard let jwt = try? decode(jwt: refreshToken ?? ""),
+              let sub = jwt.body["sub"] as? String else {
+            return nil
+        }
+        if jwt.body.isEmpty {
+            return nil
+        }
+        return groupMembers.first(where: { $0.id.uuidString == sub })?.role
     }
     
     func initLogin() async {
@@ -55,6 +67,7 @@ class AppState: ObservableObject {
         self.accessToken = nil
         self.refreshToken = nil
         self.refreshTask = nil
+        self.userId = nil
         
         try? KeychainManager.delete(forKey: TokenKey.accessToken)
         try? KeychainManager.delete(forKey: TokenKey.refreshToken)

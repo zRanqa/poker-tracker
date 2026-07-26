@@ -32,7 +32,24 @@ struct PlayerTotals: Identifiable, Equatable {
     var linePoints: [LinePoint] = []
     
     
-    func value(for label: String) -> String {
+    func value(for label: String) -> Double {
+        switch label {
+        case "Buy Ins": return Double(buyIns)
+        case "Loss Percentage": return lossPercentage
+        case "Loss Streak": return Double(lossStreak)
+        case "Most Money Lost": return mostMoneyLost
+        case "Most Money Won": return mostMoneyWon
+        case "Total Games": return Double(totalGames)
+        case "Total Losses": return Double(totalLosses)
+        case "Total Money": return totalMoney
+        case "Total Wins": return Double(totalWins)
+        case "Win Percentage": return winPercentage
+        case "Win Streak": return Double(winStreak)
+        default: return 0.0
+        }
+    }
+    
+    func label(for label: String) -> String {
         switch label {
         case "Buy Ins": return "\(buyIns)"
         case "Loss Percentage": return String(format: "%.1f%%", lossPercentage)

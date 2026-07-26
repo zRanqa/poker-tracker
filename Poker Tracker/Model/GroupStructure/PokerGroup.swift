@@ -27,12 +27,12 @@ func getTestGroups() -> [PokerGroup] {
 
 func getTestGroup() -> PokerGroup {
     let groupMembers: [GroupMember] = [
-        GroupMember(id: UUID(), name: "Member 1", email: "member1@email.com", role: "leader"),
-        GroupMember(id: UUID(), name: "Member 2", email: "member2@email.com", role: "moderator"),
-        GroupMember(id: UUID(), name: "Member 3", email: "member3@email.com", role: "moderator"),
-        GroupMember(id: UUID(), name: "Member 4", email: "member4@email.com", role: "member"),
-        GroupMember(id: UUID(), name: "Member 5", email: "member5@email.com", role: "member"),
-        GroupMember(id: UUID(), name: "Member 6", email: "member6@email.com", role: "member"),
+        GroupMember(id: UUID(), name: "Member 1", email: "member1@email.com", role: .leader),
+        GroupMember(id: UUID(), name: "Member 2", email: "member2@email.com", role: .moderator),
+        GroupMember(id: UUID(), name: "Member 3", email: "member3@email.com", role: .moderator),
+        GroupMember(id: UUID(), name: "Member 4", email: "member4@email.com", role: .member),
+        GroupMember(id: UUID(), name: "Member 5", email: "member5@email.com", role: .member),
+        GroupMember(id: UUID(), name: "Member 6", email: "member6@email.com", role: .member),
         GroupMember(id: UUID(), name: "Guest 1", email: nil, role: nil),
         GroupMember(id: UUID(), name: "Guest 2", email: nil, role: nil)
     ]

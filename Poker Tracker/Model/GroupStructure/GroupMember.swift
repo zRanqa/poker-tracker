@@ -7,11 +7,17 @@
 
 import Foundation
 
+enum GroupRole: String, Codable {
+    case leader
+    case moderator
+    case member
+}
+
 struct GroupMember: Identifiable, Hashable {
     var id: UUID
     var name: String
     var email: String?
-    var role: String?
+    var role: GroupRole?
     
     var isGuest: Bool {
         email == nil
@@ -20,7 +26,7 @@ struct GroupMember: Identifiable, Hashable {
 
 
 func getTestGroupMember() -> GroupMember {
-    let randomRole: String = ["leader", "moderator", "member"].randomElement()!
+    let randomRole: GroupRole = [.leader, .member, .moderator].randomElement()!
     return GroupMember(id: UUID(), name: "Test Member", email: "test@example.com", role: randomRole)
 }
 

@@ -28,27 +28,28 @@ struct GroupMemberRolePicker: View {
     
         
     var body: some View {
-        if groupMember.role == "leader" {
-            Image(systemName: icon(for: groupMember.role))
+        if groupMember.role == .leader {
+            Image(systemName: icon(for: groupMember.role?.rawValue))
         }
         else {
             Menu {
                 ForEach(roles, id: \.self) { role in
                     Button {
-                        groupMember.role = role
+                        groupMember.role = GroupRole.init(rawValue: role)
                     } label: {
                         Label(role.capitalized, systemImage: icon(for: role))
                     }
                 }
             } label: {
                 HStack {
-                    Image(systemName: icon(for: groupMember.role))
+                    Image(systemName: icon(for: groupMember.role?.rawValue))
                     
-                    if isLeader && groupMember.role != "leader" {
+                    if isLeader && groupMember.role != .leader {
                         Image(systemName: "chevron.down")
                     }
                 }
             }
+            .padding(.trailing, isLeader ? 0 : 5 )
             .disabled(!isLeader)
             .buttonStyle(.plain)
         }

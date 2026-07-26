@@ -11,6 +11,7 @@ struct PlayersTab: View {
     @Environment(\.colorScheme) var colorScheme
     
     @Binding var playerTotals: [PlayerTotals]
+    @State var sortedPlayerTotals: [PlayerTotals] = []
     
     @State var selectedFilter: String = "Win Percentage"
     
@@ -23,7 +24,7 @@ struct PlayersTab: View {
                 }
                 
                 VStack {
-                    ForEach(playerTotals, id: \.id) { playerTotal in
+                    ForEach(sortedPlayerTotals, id: \.id) { playerTotal in
                         PlayerValueDisplay(
                             selectedFilter: $selectedFilter,
                             playerTotals: playerTotal
@@ -40,7 +41,23 @@ struct PlayersTab: View {
             }
         }
         .padding(.horizontal, 10)
+        .onAppear() {
+            sortedPlayerTotals = playerTotals.sorted {
+                $0.value(for: selectedFilter) > $1.value(for: selectedFilter)
+            }
+        }
+        .onChange(of: playerTotals) {
+            sortedPlayerTotals = playerTotals.sorted {
+                $0.value(for: selectedFilter) > $1.value(for: selectedFilter)
+            }
+        }
+        .onChange(of: selectedFilter) { 
+            sortedPlayerTotals = playerTotals.sorted {
+                $0.value(for: selectedFilter) > $1.value(for: selectedFilter)
+            }
+        }
     }
+    
 }
 
 struct PlayersTabPreview: View {

@@ -74,7 +74,7 @@ enum GroupScreenAPI {
                 id: UUID(uuidString: dto.id) ?? UUID(),
                 name: dto.name,
                 email: dto.email,
-                role: dto.role
+                role: GroupRole.init(rawValue: dto.role ?? "")
             )
         }
         
@@ -207,6 +207,25 @@ enum GroupScreenAPI {
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         request.httpBody = try JSONEncoder().encode(
             TurnGuestIntoUserRequest(group_id: groupId, guest_id: guestId.uuidString, user_email: userEmail)
+        )
+        
+        let (data, _) = try await URLSession.shared.data(for: request)
+        let response = try JSONDecoder().decode(GenericResponse.self, from: data)
+        
+        return response
+    }
+    
+    static func removeUserFromGroup(token: String, groupId: Int, userId: UUID) async throws -> GenericResponse {
+        guard let url = URL(string: getApiUrl(endpoint: .removeUserFromGroup)) else {
+            return GenericResponse(status: "error", message: "Error getting URL")
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        request.httpBody = try JSONEncoder().encode(
+            RemoveUserFromGroupRequest(group_id: groupId, user_id: userId.uuidString)
         )
         
         let (data, _) = try await URLSession.shared.data(for: request)

@@ -36,3 +36,9 @@ struct TurnGuestIntoUserRequest: Codable {
     let guest_id: String
     let user_email: String
 }
+
+
+struct RemoveUserFromGroupRequest: Codable {
+    let group_id: Int
+    let user_id: String
+}

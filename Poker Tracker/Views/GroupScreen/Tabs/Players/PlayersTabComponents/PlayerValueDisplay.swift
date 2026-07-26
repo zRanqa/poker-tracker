@@ -21,7 +21,7 @@ struct PlayerValueDisplay: View {
 
                 Spacer()
 
-                Text(playerTotals.value(for: selectedFilter))
+                Text(playerTotals.label(for: selectedFilter))
                     .font(.body)
                     .foregroundStyle(.secondary)
 

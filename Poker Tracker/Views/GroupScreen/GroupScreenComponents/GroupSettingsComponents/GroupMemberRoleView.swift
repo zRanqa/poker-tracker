@@ -11,9 +11,11 @@ struct GroupMemberRoleView: View {
     @EnvironmentObject var appState: AppState
     @State var groupMember: GroupMember
     @Binding var errorMessage: String
-    var isLeader: Bool
+    var userRole: GroupRole
     var loadGroup: () -> Void
     var turnGuestIntoUser: (UUID) -> Void = { _ in }
+    
+    @State var showingDeleteConfirmation = false
     
     var vm = GroupMemberRoleViewModel()
     
@@ -22,18 +24,31 @@ struct GroupMemberRoleView: View {
             Text(groupMember.name)
             Spacer()
             if !groupMember.isGuest  {
-                GroupMemberRolePicker(groupMember: $groupMember, isLeader: isLeader)
+                GroupMemberRolePicker(groupMember: $groupMember, isLeader: userRole == .leader)
             }
             else {
-                Button(action: {
-                    turnGuestIntoUser(groupMember.id)
-                }) {
-                    Image(systemName: "envelope")
+                if userRole != .member {
+                    Button(action: {
+                        turnGuestIntoUser(groupMember.id)
+                    }) {
+                        Image(systemName: "envelope")
+                    }
+                    .buttonStyle(.plain)
                 }
-                .buttonStyle(.plain)
             }
-            Button(action: {
-                // Delete
+            if !(groupMember.role == .leader) && userRole != .member {
+                Button(action: {
+                    // Delete
+                    showingDeleteConfirmation = true
+                }) {
+                    Image(systemName: "circle.slash")
+                }
+                .foregroundStyle(Color.red)
+            }
+        }
+        .font(.title2)
+        .confirmationDialog("Delete Entry", isPresented: $showingDeleteConfirmation, titleVisibility: .visible) {
+            Button("Delete", role: .destructive) {
                 Task {
                     guard let token = try? await appState.validAccessToken() else {
                         errorMessage = "Your session expired. Please log in again."
@@ -42,12 +57,12 @@ struct GroupMemberRoleView: View {
                     errorMessage = await vm.removeGroupMember(token: token, groupId: appState.groupId ?? 0, groupMember: groupMember)
                     loadGroup()
                 }
-            }) {
-                Image(systemName: "circle.slash")
             }
-            .foregroundStyle(Color.red)
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            let memberType = groupMember.isGuest ? "guest" : "member"
+            Text("Are you sure you want to remove this \(memberType) from the group?")
         }
-        .font(.title2)
     }
 }
 
@@ -55,7 +70,7 @@ struct GroupMemberRoleViewPreview: View {
     @State var error = ""
     
     var body: some View {
-        GroupMemberRoleView(groupMember: getTestGuestMember(), errorMessage: $error, isLeader: true, loadGroup: {})
+        GroupMemberRoleView(groupMember: getTestGroupMember(), errorMessage: $error, userRole: .member, loadGroup: {})
     }
 }
 
