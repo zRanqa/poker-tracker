@@ -47,7 +47,11 @@ struct HomeScreen: View {
             BottomBarView(onNavigate: onNavigate)
         }
         .task {
-            groups = await vm.getGroups(token: appState.token ?? "")
+            
+            guard let token = try? await appState.validAccessToken() else {
+                return
+            }
+            groups = await vm.getGroups(token: token)
             groups.append(getTestGroup())
         }
         .edgesIgnoringSafeArea(.bottom)

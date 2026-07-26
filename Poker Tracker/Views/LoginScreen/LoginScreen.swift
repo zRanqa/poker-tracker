@@ -15,6 +15,7 @@ enum LoginState {
 
 struct LoginScreen: View {
     @Environment(\.colorScheme) var colorScheme
+    @EnvironmentObject var appState: AppState
     
     @State private var loginState: LoginState = .loginSignup
     
@@ -42,6 +43,9 @@ struct LoginScreen: View {
             }
             
             Spacer()
+        }
+        .task {
+            await appState.initLogin()
         }
     }
 } 

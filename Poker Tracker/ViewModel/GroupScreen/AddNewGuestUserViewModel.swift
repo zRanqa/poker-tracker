@@ -12,7 +12,7 @@ import Observation
 class AddNewGuestUserViewModel {
     func addGuest(token: String, groupId: Int, name: String) async -> String {
         do {
-            let response = try await addGuestMemberToGroup(token: token, groupId: groupId, name: name)
+            let response = try await GroupScreenAPI.addGuestMemberToGroup(token: token, groupId: groupId, name: name)
             if response.status == "error" {
                 return response.message
             }

@@ -13,7 +13,7 @@ import Observation
 class GroupSettingsViewModel {
     func updateGroupName(token: String, groupId: Int, name: String) async -> String {
         do {
-            let response = try await updateGroupNameDB(token: token, groupId: groupId, name: name)
+            let response = try await GroupScreenAPI.updateGroupNameDB(token: token, groupId: groupId, name: name)
             return response.status
         } catch {
             print(error)
@@ -21,4 +21,5 @@ class GroupSettingsViewModel {
 //            return error.localizedDescription
         }
     }
+    
 }

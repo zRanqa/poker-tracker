@@ -23,3 +23,16 @@ struct UpdateGroupNameRequest: Codable {
     let group_id: Int
     let name: String
 }
+
+
+struct RemoveGuestMemberRequest: Codable {
+    let group_id: Int
+    let id: String
+}
+
+
+struct TurnGuestIntoUserRequest: Codable {
+    let group_id: Int
+    let guest_id: String
+    let user_email: String
+}

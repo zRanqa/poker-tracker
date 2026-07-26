@@ -8,5 +8,5 @@
 struct LoginDTO: Codable {
     let status: String
     let message: String
-    let data: String?
+    let data: RefreshTokens
 }

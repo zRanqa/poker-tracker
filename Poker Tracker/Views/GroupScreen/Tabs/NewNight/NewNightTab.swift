@@ -62,7 +62,13 @@ struct NewNightTab: View {
         errorMessage = ""
         
         let pokerSession = PokerSession(id: -1, date: nightDate, sessionEntries: sessionEntries)
-        let response = await vm.saveNight(token: appState.token ?? "", groupId: groupId, pokerSession: pokerSession)
+        
+        guard let token = try? await appState.validAccessToken() else {
+            errorMessage = "Your session expired. Please log in again."
+            return
+        }
+        let response = await vm.saveNight(token: token, groupId: groupId, pokerSession: pokerSession)
+        
         if response.status == "error" {
             errorMessage = response.message
         }

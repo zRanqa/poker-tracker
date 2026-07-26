@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct AddNewGuestUserView: View {
+struct InviteNewUserView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var appState: AppState
     
@@ -16,17 +16,17 @@ struct AddNewGuestUserView: View {
     @State var newUser: String = ""
     @State var errorMessage = ""
     
-    var vm = AddNewGuestUserViewModel()
+    var vm = InviteNewUserViewViewModel()
     
     var body: some View {
         NavigationStack {
             VStack {
                 HStack {
-                    Text("Name:")
+                    Text("Email:")
                     Spacer()
                 }
                 .padding(.top, 20)
-                TextField("Name", text: $newUser)
+                TextField("Enter an Email", text: $newUser)
                     .padding(10)
                     .background()
                     .cornerRadius(10)
@@ -41,14 +41,19 @@ struct AddNewGuestUserView: View {
                     }
                     Button(action: {
                         Task {
-                            errorMessage = await vm.addGuest(token: appState.token ?? "", groupId: appState.groupId ?? 0, name: newUser)
+                            
+                            guard let token = try? await appState.validAccessToken() else {
+                                errorMessage = "Your session expired. Please log in again."
+                                return
+                            }
+                            errorMessage = await vm.addUser(token: token, groupId: appState.groupId ?? 0, email: newUser)
                             if errorMessage == "" {
-                                dismiss()
                                 loadGroup()
+                                dismiss()
                             }
                         }
                     }) {
-                        Text("Add Guest")
+                        Text("Invite")
                             .font(.body)
                             .fontWeight(.semibold)
                             .foregroundStyle(.white)
@@ -81,5 +86,5 @@ struct AddNewGuestUserView: View {
 
 
 #Preview {
-    AddNewGuestUserView(loadGroup: {})
+    InviteNewUserView(loadGroup: {})
 }

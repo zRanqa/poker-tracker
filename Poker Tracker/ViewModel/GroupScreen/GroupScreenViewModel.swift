@@ -16,10 +16,10 @@ class GroupScreenViewModel {
         var newGroup = group
         do {
             // Get group members
-            newGroup.groupMembers = try await fetchGroupMembers(token: token, groupId: group.id)
+            newGroup.groupMembers = try await GroupScreenAPI.fetchGroupMembers(token: token, groupId: group.id)
             
             // get sessions
-            newGroup.pokerSessions = try await fetchGroupSessions(token: token, groupId: group.id, groupMembers: newGroup.groupMembers)
+            newGroup.pokerSessions = try await GroupScreenAPI.fetchGroupSessions(token: token, groupId: group.id, groupMembers: newGroup.groupMembers)
             
             // calculate totals
             newGroup.playerTotals = calculateTotals(pokerGroup: newGroup)

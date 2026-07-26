@@ -9,6 +9,7 @@ let API_URL = "http://127.0.0.1:5000/api"
 
 enum APIEndpoints {
     case login
+    case refresh
     case getAllGroups
     case getGroupSessions
     case getGroupMembers
@@ -16,6 +17,8 @@ enum APIEndpoints {
     case addNewGroupMember
     case addNewGuestMember
     case updateGroupName
+    case removeGuestMember
+    case turnGuestIntoUser
 }
 
 
@@ -23,6 +26,8 @@ func getApiUrl(endpoint: APIEndpoints) -> String {
     switch endpoint {
     case .login:
         return "\(API_URL)/login"
+    case .refresh:
+        return "\(API_URL)/refresh"
     case .getAllGroups:
         return "\(API_URL)/get-user-groups"
     case .getGroupSessions:
@@ -37,5 +42,10 @@ func getApiUrl(endpoint: APIEndpoints) -> String {
         return "\(API_URL)/add-guest-group-member"
     case .updateGroupName:
         return "\(API_URL)/edit-group-name"
+    case .removeGuestMember:
+        return "\(API_URL)/remove-guest-group-member"
+    case .turnGuestIntoUser:
+        return "\(API_URL)/turn-guest-into-user"
     }
 }
+

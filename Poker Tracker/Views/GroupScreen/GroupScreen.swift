@@ -35,7 +35,11 @@ struct GroupScreen: View {
     func loadGroup() {
         Task {
             if group.id != -1 { // for testing purposes
-                group = await vm.getGroupDetails(token: appState.token ?? "", group: group)
+                
+                guard let token = try? await appState.validAccessToken() else {
+                    return
+                }
+                group = await vm.getGroupDetails(token: token, group: group)
             }
             else {
                 group.playerTotals = calculateTotals(pokerGroup: group)

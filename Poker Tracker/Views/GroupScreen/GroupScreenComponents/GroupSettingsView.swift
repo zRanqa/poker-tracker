@@ -7,6 +7,20 @@
 
 import SwiftUI
 
+enum ActiveSheet: Identifiable {
+    case newUser
+    case newGuest
+    case upgradeGuest(UUID)
+
+    var id: String {
+        switch self {
+        case .newUser: return "newUser"
+        case .newGuest: return "newGuest"
+        case .upgradeGuest(let id): return "upgradeGuest-\(id.uuidString)"
+        }
+    }
+}
+
 struct GroupSettingsView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var appState: AppState
@@ -17,8 +31,10 @@ struct GroupSettingsView: View {
     @State var editingGroupName = false
     @State var newGroupName: String = ""
     
-    @State var showNewUserForm = false
-    @State var showNewGuestForm = false
+    @State var activeSheet: ActiveSheet? = nil
+    
+    @State var userErrorMessage = ""
+    @State var guestErrorMessage = ""
     
     var groupMembers: [GroupMember] {
         group.groupMembers.filter{ $0.isGuest == false }
@@ -28,6 +44,10 @@ struct GroupSettingsView: View {
     }
     
     var vm = GroupSettingsViewModel()
+    
+    func turnGuestIntoUser(guestId: UUID) {
+        activeSheet = .upgradeGuest(guestId)
+    }
     
     var body: some View {
         NavigationStack {
@@ -48,7 +68,11 @@ struct GroupSettingsView: View {
                         Button(action: {
                             if editingGroupName {
                                 Task {
-                                    let status = await vm.updateGroupName(token: appState.token ?? "", groupId: appState.groupId ?? 0, name: newGroupName)
+                                    
+                                    guard let token = try? await appState.validAccessToken() else {
+                                        return
+                                    }
+                                    let status = await vm.updateGroupName(token: token, groupId: appState.groupId ?? 0, name: newGroupName)
                                     if status == "success" {
                                         group.name = newGroupName
                                     }
@@ -82,13 +106,22 @@ struct GroupSettingsView: View {
                         .fontWeight(.bold)
                         
                         ForEach(groupMembers, id:\.id) { groupMember in
-                            GroupMemberRoleView(groupMember: groupMember, isLeader: true)
+                            GroupMemberRoleView(groupMember: groupMember, errorMessage: $userErrorMessage, isLeader: true, loadGroup: loadGroup)
                                 .padding(.vertical, 2)
+                        }
+                        
+                        if !userErrorMessage.isEmpty {
+                            HStack {
+                                Text(userErrorMessage)
+                                    .foregroundColor(.red)
+                                    
+                                Spacer()
+                            }
                         }
                         
                         HStack {
                             Button(action: {
-                                showNewUserForm = true
+                                activeSheet = .newUser
                             }) {
                                 HStack {
                                     Image(systemName: "plus")
@@ -121,13 +154,22 @@ struct GroupSettingsView: View {
                         .fontWeight(.bold)
                         
                         ForEach(guestMembers, id:\.id) { groupMember in
-                            GroupMemberRoleView(groupMember: groupMember, isLeader: true)
+                            GroupMemberRoleView(groupMember: groupMember, errorMessage: $guestErrorMessage, isLeader: true, loadGroup: loadGroup, turnGuestIntoUser: turnGuestIntoUser)
                                 .padding(.vertical, 2)
+                        }
+                        
+                        
+                        if !guestErrorMessage.isEmpty {
+                            HStack {
+                                Text(guestErrorMessage)
+                                    .foregroundColor(.red)
+                                Spacer()
+                            }
                         }
                         
                         HStack {
                             Button(action: {
-                                showNewGuestForm = true
+                                activeSheet = .newGuest
                             }) {
                                 HStack {
                                     Image(systemName: "plus")
@@ -161,14 +203,18 @@ struct GroupSettingsView: View {
                     }
                 }
             }
-        }
-        .sheet(isPresented: $showNewUserForm) {
-            InviteNewUserView(loadGroup: loadGroup)
-                .presentationDetents([.height(300)])
-        }
-        .sheet(isPresented: $showNewGuestForm) {
-            AddNewGuestUserView(loadGroup: loadGroup)
-                .presentationDetents([.height(300)])
+        }.sheet(item: $activeSheet) { sheet in
+            switch sheet {
+            case .newUser:
+                InviteNewUserView(loadGroup: loadGroup)
+                    .presentationDetents([.height(300)])
+            case .newGuest:
+                AddNewGuestUserView(loadGroup: loadGroup)
+                    .presentationDetents([.height(300)])
+            case .upgradeGuest(let guestId):
+                TurnGuestIntoUserView(loadGroup: loadGroup, guestId: guestId)
+                    .presentationDetents([.height(300)])
+            }
         }
     }
 }
