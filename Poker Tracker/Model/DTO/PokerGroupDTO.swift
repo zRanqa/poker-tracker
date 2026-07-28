@@ -42,3 +42,14 @@ struct RemoveUserFromGroupRequest: Codable {
     let group_id: Int
     let user_id: String
 }
+
+
+struct SaveGroupRolesRequest: Codable {
+    let group_id: Int
+    let group_members: [GroupMemberRoleDTO]
+}
+
+struct GroupMemberRoleDTO: Codable {
+    let id: String
+    let role: String
+}

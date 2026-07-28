@@ -233,4 +233,27 @@ enum GroupScreenAPI {
         
         return response
     }
+    
+    static func saveGroupRoles(token: String, groupId: Int, groupMembers: [GroupMember]) async throws -> GenericResponse {
+        guard let url = URL(string: getApiUrl(endpoint: .saveGroupRoles)) else {
+            return GenericResponse(status: "error", message: "Error getting URL")
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "PUT"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        request.httpBody = try JSONEncoder().encode(
+            SaveGroupRolesRequest(
+                group_id: groupId,
+                group_members: groupMembers.map { member in
+                    GroupMemberRoleDTO(id: member.id.uuidString, role: member.role?.rawValue ?? "")
+                })
+        )
+        
+        let (data, _) = try await URLSession.shared.data(for: request)
+        let response = try JSONDecoder().decode(GenericResponse.self, from: data)
+        
+        return response
+    }
 }

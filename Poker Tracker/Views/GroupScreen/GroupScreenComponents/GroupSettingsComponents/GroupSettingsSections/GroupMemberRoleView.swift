@@ -9,13 +9,14 @@ import SwiftUI
 
 struct GroupMemberRoleView: View {
     @EnvironmentObject var appState: AppState
-    @State var groupMember: GroupMember
+    @Binding var groupMember: GroupMember
     @Binding var errorMessage: String
     var userRole: GroupRole
     var loadGroup: () -> Void
     var turnGuestIntoUser: (UUID) -> Void = { _ in }
     
     @State var showingDeleteConfirmation = false
+    @Binding var editingSettings: Bool
     
     var vm = GroupMemberRoleViewModel()
     
@@ -24,10 +25,10 @@ struct GroupMemberRoleView: View {
             Text(groupMember.name)
             Spacer()
             if !groupMember.isGuest  {
-                GroupMemberRolePicker(groupMember: $groupMember, isLeader: userRole == .leader)
+                GroupMemberRolePicker(groupMember: $groupMember, isLeader: userRole == .leader, editingSettings: $editingSettings)
             }
             else {
-                if userRole != .member {
+                if userRole != .member && editingSettings {
                     Button(action: {
                         turnGuestIntoUser(groupMember.id)
                     }) {
@@ -36,7 +37,7 @@ struct GroupMemberRoleView: View {
                     .buttonStyle(.plain)
                 }
             }
-            if !(groupMember.role == .leader) && userRole != .member {
+            if !(groupMember.role == .leader) && userRole != .member && editingSettings {
                 Button(action: {
                     // Delete
                     showingDeleteConfirmation = true
@@ -68,9 +69,10 @@ struct GroupMemberRoleView: View {
 
 struct GroupMemberRoleViewPreview: View {
     @State var error = ""
-    
+    @State var groupMember = getTestGroupMember()
+    @State var editingSettings = false
     var body: some View {
-        GroupMemberRoleView(groupMember: getTestGroupMember(), errorMessage: $error, userRole: .member, loadGroup: {})
+        GroupMemberRoleView(groupMember: $groupMember, errorMessage: $error, userRole: .member, loadGroup: {}, editingSettings: $editingSettings)
     }
 }
 

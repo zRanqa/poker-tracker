@@ -66,6 +66,8 @@ struct GroupScreen: View {
                 
                 Text(group.name)
                     .font(.title)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.5)
                 
                 Spacer()
                 

@@ -11,6 +11,7 @@ struct GroupMemberRolePicker: View {
     
     @Binding var groupMember: GroupMember
     var isLeader: Bool
+    @Binding var editingSettings: Bool
     private let roles = ["moderator", "member"]
     
     private func icon(for role: String?) -> String {
@@ -28,8 +29,9 @@ struct GroupMemberRolePicker: View {
     
         
     var body: some View {
-        if groupMember.role == .leader {
+        if groupMember.role == .leader || !editingSettings {
             Image(systemName: icon(for: groupMember.role?.rawValue))
+                .padding(.trailing, groupMember.role == .leader ? 0 : 4 )
         }
         else {
             Menu {
@@ -58,8 +60,9 @@ struct GroupMemberRolePicker: View {
 
 struct GroupMemberRolePickerPreview: View {
     @State var groupMember = getTestGroupMember()
+    @State var editingSettings = false
     var body: some View {
-        GroupMemberRolePicker(groupMember: $groupMember, isLeader: true)
+        GroupMemberRolePicker(groupMember: $groupMember, isLeader: true, editingSettings: $editingSettings)
     }
 }
 

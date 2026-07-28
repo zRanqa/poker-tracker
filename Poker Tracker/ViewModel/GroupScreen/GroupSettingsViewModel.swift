@@ -22,4 +22,17 @@ class GroupSettingsViewModel {
         }
     }
     
+    func saveGroupRoles(token: String, groupId: Int, groupMembers: [GroupMember]) async -> String {
+        do {
+            let response = try await GroupScreenAPI.saveGroupRoles(token: token, groupId: groupId, groupMembers: groupMembers)
+            if response.status == "error" {
+                return response.message
+            }
+            return ""
+        } catch {
+            print(error)
+            return ""
+        }
+    }
+    
 }

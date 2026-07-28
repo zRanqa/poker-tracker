@@ -20,6 +20,7 @@ enum APIEndpoints {
     case removeGuestMember
     case turnGuestIntoUser
     case removeUserFromGroup
+    case saveGroupRoles
 }
 
 
@@ -49,6 +50,8 @@ func getApiUrl(endpoint: APIEndpoints) -> String {
         return "\(API_URL)/turn-guest-into-user"
     case .removeUserFromGroup:
         return "\(API_URL)/remove-user-from-group"
+    case .saveGroupRoles:
+        return "\(API_URL)/save-group-roles"
     }
 }
 
