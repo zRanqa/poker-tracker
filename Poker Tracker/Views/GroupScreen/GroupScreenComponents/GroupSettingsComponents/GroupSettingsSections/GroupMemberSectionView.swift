@@ -16,6 +16,10 @@ struct GroupMemberSectionView: View {
     
     @State var editingSettings: Bool = false
     
+    @State var groupMemberInitial: [GroupMember] = []
+    @Binding var vm: GroupSettingsViewModel
+    @Binding var group: PokerGroup
+    
     var body: some View {
         VStack {
             HStack {
@@ -25,13 +29,38 @@ struct GroupMemberSectionView: View {
                 if (!(appState.getUserRoleInGroup(groupMembers: groupMembers) == .member)) {
                     Button(action: {
                         editingSettings.toggle()
+                        
+                        if editingSettings == true {
+                            groupMemberInitial = groupMembers
+                        }
+                        else {
+                            var rolesChanged = false
+                            for i in 0..<groupMemberInitial.count {
+                                for j in 0..<groupMembers.count {
+                                    if !rolesChanged && groupMembers[i].id == groupMemberInitial[j].id {
+                                        rolesChanged = !(groupMembers[i].role == groupMemberInitial[j].role)
+                                    }
+                                }
+                            }
+                            
+                            if rolesChanged {
+                                Task {
+                                    guard let token = try? await appState.validAccessToken() else {
+                                        return
+                                    }
+                                    let errorMessage = await vm.saveGroupRoles(token: token, groupId: group.id, groupMembers: groupMembers)
+                                    print(errorMessage)
+                                    loadGroup()
+                                }
+                            }
+                        }
                     }) {
                         Text(editingSettings ? "Save" : "Edit")
                             .font(.system(size: 16, weight: .semibold))
                             .foregroundColor(.white)
                             .padding(.horizontal, 20)
                             .padding(.vertical, 5)
-                            .background(Color.blue)
+                            .background(editingSettings ? Color.green : Color.blue)
                             .cornerRadius(10)
                     }
                 }
@@ -84,6 +113,9 @@ struct GroupMemberSectionView: View {
         .cornerRadius(10)
         .shadow(radius: 5)
         .padding(.top, 20)
+        .onAppear() {
+            groupMemberInitial = groupMembers
+        }
     }
 }
 
@@ -94,9 +126,11 @@ struct GroupMemberSectionViewPreview: View {
     func loadGroup() {
         
     }
+    @State var vm = GroupSettingsViewModel()
+    @State var group = getTestGroup()
     
     var body: some View {
-        GroupMemberSectionView(groupMembers: $groupMembers, userErrorMessage: $userErrorMessage, activeSheet: $activeSheet, loadGroup: loadGroup)
+        GroupMemberSectionView(groupMembers: $groupMembers, userErrorMessage: $userErrorMessage, activeSheet: $activeSheet, loadGroup: loadGroup, vm: $vm, group: $group)
     }
 }
 

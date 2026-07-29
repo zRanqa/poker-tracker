@@ -10,16 +10,12 @@ import SwiftUI
 struct YearDropdown: View {
     @Environment(\.colorScheme) var colorScheme
     
-    var yearOptions: [String]
-    var options: [String] {
-        ["All"] + yearOptions
-    }
-    
+    @Binding var yearOptions: [String]
     @Binding var selectedOption: String
     
     var body: some View {
         Picker("Select an option", selection: $selectedOption) {
-            ForEach(options, id: \.self) {
+            ForEach(yearOptions, id: \.self) {
                 Text($0)
             }
         }
@@ -40,10 +36,11 @@ struct YearDropdown: View {
 
 struct YearDropdownPreview: View {
     
+    @State var yearOptions = ["2026", "2025", "2024"]
     @State var selectedOption: String = "All"
     
     var body: some View {
-        YearDropdown(yearOptions: ["2026", "2025", "2024"], selectedOption: $selectedOption)
+        YearDropdown(yearOptions: $yearOptions, selectedOption: $selectedOption)
     }
 }
 

@@ -34,7 +34,7 @@ struct GuestMemberSectionView: View {
                             .foregroundColor(.white)
                             .padding(.horizontal, 20)
                             .padding(.vertical, 5)
-                            .background(Color.blue)
+                            .background(editingSettings ? Color.green : Color.blue)
                             .cornerRadius(10)
                     }
                 }

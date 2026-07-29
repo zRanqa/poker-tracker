@@ -63,7 +63,9 @@ struct GroupSettingsView: View {
                         groupMembers: $groupMembers,
                         userErrorMessage: $userErrorMessage,
                         activeSheet: $activeSheet,
-                        loadGroup: loadGroup
+                        loadGroup: loadGroup,
+                        vm: $vm,
+                        group: $group
                     )
                     
                     GuestMemberSectionView(
@@ -82,26 +84,6 @@ struct GroupSettingsView: View {
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) {
                         Button("Close") {
-                            var rolesChanged = false
-                            for i in 0..<groupMemberInitial.count {
-                                for j in 0..<groupMembers.count {
-                                    if !rolesChanged && groupMembers[i].id == groupMemberInitial[j].id {
-                                        rolesChanged = !(groupMembers[i].role == groupMemberInitial[j].role)
-                                    }
-                                }
-                            }
-                            
-                            if rolesChanged {
-                                Task {
-                                    guard let token = try? await appState.validAccessToken() else {
-                                        dismiss()
-                                        return
-                                    }
-                                    let errorMessage = await vm.saveGroupRoles(token: token, groupId: group.id, groupMembers: groupMembers)
-                                    print(errorMessage)
-                                    loadGroup()
-                                }
-                            }
                             dismiss()
                         }
                     }
@@ -123,8 +105,6 @@ struct GroupSettingsView: View {
         .onAppear() {
             groupMembers = group.groupMembers.filter { !$0.isGuest }
             guestMembers = group.groupMembers.filter { $0.isGuest }
-            
-            groupMemberInitial = groupMembers
         }
         .onChange(of: group.groupMembers) {
             groupMembers = group.groupMembers.filter { !$0.isGuest }

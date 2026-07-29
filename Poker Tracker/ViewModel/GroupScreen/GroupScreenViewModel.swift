@@ -20,14 +20,23 @@ class GroupScreenViewModel {
             
             // get sessions
             newGroup.pokerSessions = try await GroupScreenAPI.fetchGroupSessions(token: token, groupId: group.id, groupMembers: newGroup.groupMembers)
-            
-            // calculate totals
-            newGroup.playerTotals = calculateTotals(pokerGroup: newGroup)
         } catch {
             print("error at groupScreenViewModel")
             print(error)
         }
         
         return newGroup
+    }
+    
+    func getYearOptions(pokerSessions: [PokerSession]) -> [String] {
+        var yearOptions = ["All"]
+        for session in pokerSessions {
+            let year = String(Calendar.current.component(.year, from: session.date))
+            if !yearOptions.contains(year) {
+                yearOptions.append(year)
+            }
+        }
+        print(yearOptions)
+        return yearOptions
     }
 }

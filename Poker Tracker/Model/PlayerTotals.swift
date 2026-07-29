@@ -67,7 +67,7 @@ struct PlayerTotals: Identifiable, Equatable {
     }
 }
 
-func calculateTotals(pokerGroup: PokerGroup) -> [PlayerTotals] {
+func calculateTotals(pokerGroup: PokerGroup, year: Int?) -> [PlayerTotals] {
     var playerTotals: [PlayerTotals] = []
     // Initialise the player totals list
     for groupMember in pokerGroup.groupMembers {
@@ -75,64 +75,66 @@ func calculateTotals(pokerGroup: PokerGroup) -> [PlayerTotals] {
     }
     
     for session in pokerGroup.pokerSessions {
-        for sessionEntry in session.sessionEntries {
-            if let index = playerTotals.firstIndex(where: { $0.id == sessionEntry.groupMember.id }) {
-                // Total money
-                playerTotals[index].totalMoney += sessionEntry.endAmount - sessionEntry.startAmount
-                
-                // Line Points
-                let newLinePoint = LinePoint(date: session.date, value: sessionEntry.endAmount - sessionEntry.startAmount)
-                playerTotals[index].linePoints.append(newLinePoint)
-                
-                // Total games
-                playerTotals[index].totalGames += 1
-                
-                // Total wins
-                if sessionEntry.endAmount >= sessionEntry.startAmount {
-                    playerTotals[index].totalWins += 1
+        if year == nil || Calendar.current.component(.year, from: session.date) == year {
+            for sessionEntry in session.sessionEntries {
+                if let index = playerTotals.firstIndex(where: { $0.id == sessionEntry.groupMember.id }) {
+                    // Total money
+                    playerTotals[index].totalMoney += sessionEntry.endAmount - sessionEntry.startAmount
+                    
+                    // Line Points
+                    let newLinePoint = LinePoint(date: session.date, value: sessionEntry.endAmount - sessionEntry.startAmount)
+                    playerTotals[index].linePoints.append(newLinePoint)
+                    
+                    // Total games
+                    playerTotals[index].totalGames += 1
+                    
+                    // Total wins
+                    if sessionEntry.endAmount >= sessionEntry.startAmount {
+                        playerTotals[index].totalWins += 1
+                    }
+                    
+                    // Total losees
+                    if sessionEntry.endAmount < sessionEntry.startAmount {
+                        playerTotals[index].totalLosses += 1
+                    }
+                    
+                    // Win percentage
+                    playerTotals[index].winPercentage = Double(playerTotals[index].totalWins) / Double(playerTotals[index].totalGames) * 100
+                    
+                    // Loss percentage
+                    playerTotals[index].lossPercentage = Double(playerTotals[index].totalLosses) / Double(playerTotals[index].totalGames) * 100
+                    
+                    // Win Streak
+                    if playerTotals[index].stopWinStreak && (sessionEntry.endAmount > sessionEntry.startAmount) {
+                        playerTotals[index].winStreak += 1
+                    }
+                    else {
+                        playerTotals[index].stopWinStreak = false
+                    }
+                    
+                    // Loss Streak
+                    if playerTotals[index].stopLossStreak && (sessionEntry.endAmount < sessionEntry.startAmount) {
+                        playerTotals[index].lossStreak += 1
+                    }
+                    else {
+                        playerTotals[index].stopLossStreak = false
+                    }
+                    
+                    // Buy Ins
+                    playerTotals[index].buyIns += sessionEntry.buyIns
+                    
+                    // Most Money Won
+                    if sessionEntry.endAmount - sessionEntry.startAmount > playerTotals[index].mostMoneyWon {
+                        playerTotals[index].mostMoneyWon = sessionEntry.endAmount - sessionEntry.startAmount
+                    }
+                    
+                    // Most money Lost
+                    if sessionEntry.endAmount - sessionEntry.startAmount < playerTotals[index].mostMoneyLost {
+                        playerTotals[index].mostMoneyLost = sessionEntry.endAmount - sessionEntry.startAmount
+                    }
+                    
+                    
                 }
-                
-                // Total losees
-                if sessionEntry.endAmount < sessionEntry.startAmount {
-                    playerTotals[index].totalLosses += 1
-                }
-                
-                // Win percentage
-                playerTotals[index].winPercentage = Double(playerTotals[index].totalWins) / Double(playerTotals[index].totalGames) * 100
-                
-                // Loss percentage
-                playerTotals[index].lossPercentage = Double(playerTotals[index].totalLosses) / Double(playerTotals[index].totalGames) * 100
-                
-                // Win Streak
-                if playerTotals[index].stopWinStreak && (sessionEntry.endAmount > sessionEntry.startAmount) {
-                    playerTotals[index].winStreak += 1
-                }
-                else {
-                    playerTotals[index].stopWinStreak = false
-                }
-                
-                // Loss Streak
-                if playerTotals[index].stopLossStreak && (sessionEntry.endAmount < sessionEntry.startAmount) {
-                    playerTotals[index].lossStreak += 1
-                }
-                else {
-                    playerTotals[index].stopLossStreak = false
-                }
-                
-                // Buy Ins
-                playerTotals[index].buyIns += sessionEntry.buyIns
-                
-                // Most Money Won
-                if sessionEntry.endAmount - sessionEntry.startAmount > playerTotals[index].mostMoneyWon {
-                    playerTotals[index].mostMoneyWon = sessionEntry.endAmount - sessionEntry.startAmount
-                }
-                
-                // Most money Lost
-                if sessionEntry.endAmount - sessionEntry.startAmount < playerTotals[index].mostMoneyLost {
-                    playerTotals[index].mostMoneyLost = sessionEntry.endAmount - sessionEntry.startAmount
-                }
-                
-                
             }
         }
     }

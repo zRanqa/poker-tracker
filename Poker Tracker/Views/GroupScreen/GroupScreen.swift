@@ -25,6 +25,7 @@ struct GroupScreen: View {
     let lightColor = Color(red: 0.85, green: 0.85, blue: 0.85)
     let darkColor = Color(red: 0.20, green: 0.20, blue: 0.20)
     
+    @State var yearOptions: [String] = ["All"]
     @State var selectedYear: String = "All"
     @State private var selectedTab = 0
     
@@ -34,17 +35,25 @@ struct GroupScreen: View {
     
     func loadGroup() {
         Task {
-            if group.id != -1 { // for testing purposes
+            if group.id != -1 { // TODO: REMOVE LATER  for testing purposes
                 
                 guard let token = try? await appState.validAccessToken() else {
                     return
                 }
                 group = await vm.getGroupDetails(token: token, group: group)
+                yearOptions = vm.getYearOptions(pokerSessions: group.pokerSessions)
+                print(yearOptions)
+                updatePlayerTotals()
             }
             else {
-                group.playerTotals = calculateTotals(pokerGroup: group)
+                updatePlayerTotals()
             }
         }
+    }
+    
+    func updatePlayerTotals() {
+        let convertedYear: Int? = Int(selectedYear)
+        group.playerTotals = calculateTotals(pokerGroup: group, year: convertedYear)
     }
     
     var body: some View {
@@ -53,14 +62,8 @@ struct GroupScreen: View {
             
             HStack {
                 
-                Button(action: {
-                    showGroupSettingsSheet = true
-                }) {
-                    Image(systemName: "gearshape")
-                        .font(.system(size: 30, weight: .bold))
-                        .padding(.leading, 20)
-                }
-                .buttonStyle(.plain)
+                YearDropdown(yearOptions: $yearOptions, selectedOption: $selectedYear)
+                    .padding(.leading, 20)
                 
                 Spacer()
                 
@@ -71,8 +74,14 @@ struct GroupScreen: View {
                 
                 Spacer()
                 
-                YearDropdown(yearOptions: ["2026", "2025", "2024"], selectedOption: $selectedYear)
-                    .padding(.trailing, 20)
+                Button(action: {
+                    showGroupSettingsSheet = true
+                }) {
+                    Image(systemName: "gearshape")
+                        .font(.system(size: 30))
+                        .padding(.trailing, 20)
+                }
+                .buttonStyle(.plain)
                 
             }
             .frame(maxWidth: .infinity)
@@ -120,6 +129,9 @@ struct GroupScreen: View {
         .edgesIgnoringSafeArea(.bottom)
         .fullScreenCover(isPresented: $showGroupSettingsSheet) {
             GroupSettingsView(group: $group, loadGroup: loadGroup)
+        }
+        .onChange(of: selectedYear) {
+            updatePlayerTotals()
         }
     }
 }
