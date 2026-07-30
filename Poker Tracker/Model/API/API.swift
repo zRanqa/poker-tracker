@@ -9,7 +9,10 @@ let API_URL = "http://127.0.0.1:5000/api"
 
 enum APIEndpoints {
     case login
+    case createVerificationCode
+    case createAccount
     case refresh
+    case createGroup
     case getAllGroups
     case getGroupSessions
     case getGroupMembers
@@ -28,8 +31,14 @@ func getApiUrl(endpoint: APIEndpoints) -> String {
     switch endpoint {
     case .login:
         return "\(API_URL)/login"
+    case .createVerificationCode:
+        return "\(API_URL)/create-verification-code"
+    case .createAccount:
+        return "\(API_URL)/create-account"
     case .refresh:
         return "\(API_URL)/refresh"
+    case .createGroup:
+        return "\(API_URL)/create-group"
     case .getAllGroups:
         return "\(API_URL)/get-user-groups"
     case .getGroupSessions:

@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct VerificationCodeView: View {
+    @Environment(\.colorScheme) var colorScheme
+    @EnvironmentObject var appState: AppState
     
     var onNavigate: (AppScreen) -> Void
     @Binding var loginState: LoginState
@@ -17,6 +19,14 @@ struct VerificationCodeView: View {
     @State private var isLoading: Bool = false
     @State private var verifictionCode: Bool = false
     @State private var codeInput = ""
+    
+    
+    @Binding var email: String
+    @Binding var password: String
+    @Binding var name: String
+    
+    var vm = VerificationCodeViewModel()
+    var loginSignupVM = LoginSignupFormViewModel()
     
     func confirmCode() {
         errorMessage = ""
@@ -28,12 +38,14 @@ struct VerificationCodeView: View {
         }
         
         isLoading = true
-//        if savedUserInfo == nil {
-//            errorMessage = "User info is nil??"
-//            return
-//        }
         
-        onNavigate(.homeScreen)
+        Task {
+            errorMessage = await vm.signupNewAccount(email: email, password: password, name: name, code: filteredCode)
+            if errorMessage == "" {
+                errorMessage = await loginSignupVM.login(email: email, password: password, appState: appState)
+            }
+            isLoading = false
+        }
     }
     
     var body: some View {
@@ -42,6 +54,8 @@ struct VerificationCodeView: View {
                 .font(.title)
             Text("A verification code has been sent to your email!")
                 .font(.subheadline)
+            Text("(It might be in your spam folder!)")
+                .font(.footnote)
             
             TextField("Enter code", text: $codeInput)
                 .keyboardType(.numberPad)
@@ -58,7 +72,9 @@ struct VerificationCodeView: View {
                 .font(.system(size: 24, weight: .semibold, design: .monospaced))
                 .frame(maxWidth: 280)
                 .padding(10)
-                .background(Color(red: 0.1, green: 0.1, blue: 0.1))
+                .background(colorScheme == .dark ?
+                            Color(red: 0.1, green: 0.1, blue: 0.1) :
+                            Color(red: 0.9, green: 0.9, blue: 0.9))
                 .cornerRadius(8)
                 .padding(.vertical, 5)
             
@@ -88,9 +104,12 @@ struct VerificationCodeView: View {
 
 struct VerificationCodeViewPreview: View {
     @State var loginState: LoginState = .verification
+    @State var email = ""
+    @State var password = ""
+    @State var name = ""
     var body: some View {
         
-        VerificationCodeView(onNavigate: {_ in}, loginState: $loginState)
+        VerificationCodeView(onNavigate: {_ in}, loginState: $loginState, email: $email, password: $password, name: $name)
     }
 }
 

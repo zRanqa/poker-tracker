@@ -15,7 +15,7 @@ class HomeScreenViewModel {
     
     func getGroups(token: String) async -> [PokerGroup] {
         do {
-            let pokerGroups = try await fetchGroups(token: token)
+            let pokerGroups = try await HomeScreenAPI.fetchGroups(token: token)
             return pokerGroups
         } catch {
             print(error)

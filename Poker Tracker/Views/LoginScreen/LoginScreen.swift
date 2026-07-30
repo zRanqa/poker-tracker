@@ -21,6 +21,10 @@ struct LoginScreen: View {
     
     var onNavigate: (AppScreen) -> Void
     
+    @State var email: String = "jonnoach@gmail.com"
+    @State var password: String = "securePassword1"
+    @State var name: String = ""
+    
     
     var body: some View {
         VStack {
@@ -35,11 +39,23 @@ struct LoginScreen: View {
             .bold(true)
             
             if loginState == .loginSignup {
-                LoginSignupForm(onNavigate: onNavigate, loginState: $loginState)
+                LoginSignupForm(
+                    onNavigate: onNavigate,
+                    loginState: $loginState,
+                    email: $email,
+                    password: $password,
+                    name: $name
+                )
                     .padding(.horizontal, 30)
             }
             else {
-                VerificationCodeView(onNavigate: onNavigate, loginState: $loginState)
+                VerificationCodeView(
+                    onNavigate: onNavigate,
+                    loginState: $loginState,
+                    email: $email,
+                    password: $password,
+                    name: $name
+                )
             }
             
             Spacer()

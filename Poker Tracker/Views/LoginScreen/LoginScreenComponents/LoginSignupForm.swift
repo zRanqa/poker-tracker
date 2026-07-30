@@ -19,13 +19,13 @@ struct LoginSignupForm: View {
     var onNavigate: (AppScreen) -> Void
     @Binding var loginState: LoginState
     
-    @State private var email: String = "jonnoach@gmail.com"
+    @Binding var email: String
     @State private var emailValid: Bool = true
     
-    @State private var password: String = "securePassword1"
+    @Binding var password: String
     @State private var passwordValid: Bool = true
     
-    @State private var name: String = ""
+    @Binding var name: String
     @State private var nameValid: Bool = true
     
     
@@ -47,29 +47,53 @@ struct LoginSignupForm: View {
     
     private let vm = LoginSignupFormViewModel()
     
+    
     func confirmButton() {
+        
+        guard email.contains("@"), email.contains(".") else {
+            errorMessage = "Please enter a valid email"
+            return
+        }
+        guard !password.isEmpty else {
+            errorMessage = "Please enter a password"
+            return
+        }
+        guard password.count < 30 else {
+            errorMessage = "Password must be under 30 characters"
+            return
+        }
+        let passwordError = vm.validatePassword(password)
+        if passwordError != "" {
+            errorMessage = passwordError
+            return
+        }
+        
+        
+        errorMessage = ""
         if state == .login {
-            
-            guard email.contains("@"), email.contains(".") else {
-                errorMessage = "Please enter a valid email"
-                return
-            }
-            guard !password.isEmpty else {
-                errorMessage = "Please enter a password"
-                return
-            }
-            
-            errorMessage = ""
-                
             Task {
+                isLoading = true
                 errorMessage = await vm.login(email: email, password: password, appState: appState)
             }
-            
-//            onNavigate(.homeScreen)
         }
         else {
-            loginState = .verification
+            guard !name.isEmpty else {
+                errorMessage = "Please enter a name"
+                return
+            }
+            guard name.count < 30 else {
+                errorMessage = "Name must be under 30 characters"
+                return
+            }
+            Task {
+                isLoading = true
+                errorMessage = await vm.createVerificationCode(email: email)
+                if errorMessage == "" {
+                    loginState = .verification
+                }
+            }
         }
+        isLoading = false
     }
     
     func toggleState() {
@@ -176,9 +200,12 @@ struct LoginSignupForm: View {
 
 struct LoginSignupFormPreview: View {
     @State var loginState: LoginState = .loginSignup
+    @State var name = ""
+    @State var email = ""
+    @State var password = ""
     var body: some View {
         
-        LoginSignupForm(onNavigate: {_ in}, loginState: $loginState)
+        LoginSignupForm(onNavigate: {_ in}, loginState: $loginState, email: $email, password: $password, name: $name)
     }
 }
 

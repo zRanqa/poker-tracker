@@ -11,10 +11,21 @@ struct HomeScreen: View {
     var onNavigate: (AppScreen) -> Void
     @EnvironmentObject var appState: AppState
     
-    
     @State var groups: [PokerGroup] = []
     
+    @State var showCreateGroupSheet = false
+    
     var vm = HomeScreenViewModel()
+    
+    func loadGroups() {
+        Task {
+            guard let token = try? await appState.validAccessToken() else {
+                return
+            }
+            groups = await vm.getGroups(token: token)
+            groups.append(getTestGroup())
+        }
+    }
     
     var body: some View {
         VStack {
@@ -32,14 +43,19 @@ struct HomeScreen: View {
                                 .stroke(Color.secondary, lineWidth: 3)
                         )
                     
-                    Text("Create a Group")
-                        .padding()
-                        .frame(maxWidth: .infinity, maxHeight: 180)
-                        .cornerRadius(20)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 20)
-                                .stroke(Color.secondary, lineWidth: 3)
-                        )
+                    Button(action: {
+                        showCreateGroupSheet = true
+                    }) {
+                        Text("Create a Group")
+                            .padding()
+                            .frame(maxWidth: .infinity, maxHeight: 180)
+                            .cornerRadius(20)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 20)
+                                    .stroke(Color.secondary, lineWidth: 3)
+                            )
+                    }
+                    .buttonStyle(.plain)
                 }
                 .padding(.horizontal)
             }
@@ -47,14 +63,13 @@ struct HomeScreen: View {
             BottomBarView(onNavigate: onNavigate)
         }
         .task {
-            
-            guard let token = try? await appState.validAccessToken() else {
-                return
-            }
-            groups = await vm.getGroups(token: token)
-            groups.append(getTestGroup())
+            loadGroups()
         }
         .edgesIgnoringSafeArea(.bottom)
+        .sheet(isPresented: $showCreateGroupSheet) {
+            CreateGroupFormView(loadGroups: loadGroups)
+                .presentationDetents([.height(450)])
+        }
     }
 }
 
