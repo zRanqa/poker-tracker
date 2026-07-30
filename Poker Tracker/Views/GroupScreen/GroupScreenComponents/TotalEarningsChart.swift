@@ -21,29 +21,24 @@ struct TotalEarningsChart: View {
     @State var showedTotals: [PlayerTotals] = []
     
     private let barWidth: CGFloat = 60
+    private var needsScrolling: Bool {
+            CGFloat(showedTotals.count) * barWidth > UIScreen.main.bounds.width - 20
+        }
     
     var body: some View {
-        
         VStack {
-            ScrollView(.horizontal, showsIndicators: false) {
-                Chart(showedTotals) { player in
-                    BarMark(
-                        x: .value("Player", player.name),
-                        y: .value("Total", player.totalMoney)
-                    )
-                    .annotation(position: player.totalMoney >= 0 ? .top : .bottom) {
-                        Text("\(formatMoney(double: player.totalMoney))")
-                            .font(.system(size: 10))
-                            .foregroundColor(.primary)
-                    }
-                    .foregroundStyle(player.totalMoney >= 0 ? .green : .red)
+            if needsScrolling {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    chartView
+                        .frame(width: CGFloat(showedTotals.count) * barWidth, height: 250)
+                        .padding(.horizontal, 10)
+                        .padding(.top, 10)
                 }
-                .frame(
-                    width: max(UIScreen.main.bounds.width - 20,
-                               CGFloat(showedTotals.count) * barWidth),
-                    height: 250                )
-                .padding(.horizontal, 10)
-                .padding(.top, 10)
+            } else {
+                chartView
+                    .frame(height: 250)
+                    .padding(.horizontal, 10)
+                    .padding(.top, 10)
             }
         }
         .onAppear {
@@ -55,7 +50,21 @@ struct TotalEarningsChart: View {
         .onChange(of: playerTotals) {
             updateData(for: selectedYear)
         }
-
+    }
+    
+    private var chartView: some View {
+        Chart(showedTotals) { player in
+            BarMark(
+                x: .value("Player", player.name),
+                y: .value("Total", player.totalMoney)
+            )
+            .annotation(position: player.totalMoney >= 0 ? .top : .bottom) {
+                Text("\(formatMoney(double: player.totalMoney))")
+                    .font(.system(size: 10))
+                    .foregroundColor(.primary)
+            }
+            .foregroundStyle(player.totalMoney >= 0 ? .green : .red)
+        }
     }
     
     
@@ -84,16 +93,19 @@ struct TotalEarningsChart: View {
 struct TotalEarningsChartPreview: View {
     
     @State var selectedYear: String = "2025"
+//    @State var playerTotals: [PlayerTotals] = [
+//            PlayerTotals(id: UUID(), name: "Bob", totalMoney: 20.0),
+//            PlayerTotals(id: UUID(), name: "bo", totalMoney: 10.0),
+//            PlayerTotals(id: UUID(), name: "Bo", totalMoney: -10.0),
+//            PlayerTotals(id: UUID(), name: "Bos", totalMoney: -10.0),
+//            PlayerTotals(id: UUID(), name: "Bod", totalMoney: -10.0),
+//            PlayerTotals(id: UUID(), name: "Bof", totalMoney: -10.0),
+//            PlayerTotals(id: UUID(), name: "Boe", totalMoney: -10.0),
+//            PlayerTotals(id: UUID(), name: "Boo", totalMoney: -10.0),
+//            PlayerTotals(id: UUID(), name: "Jimmy", totalMoney: -20.0)
+//        ]
     @State var playerTotals: [PlayerTotals] = [
-            PlayerTotals(id: UUID(), name: "Bob", totalMoney: 20.0),
-            PlayerTotals(id: UUID(), name: "bo", totalMoney: 10.0),
-            PlayerTotals(id: UUID(), name: "Bo", totalMoney: -10.0),
-            PlayerTotals(id: UUID(), name: "Bos", totalMoney: -10.0),
-            PlayerTotals(id: UUID(), name: "Bod", totalMoney: -10.0),
-            PlayerTotals(id: UUID(), name: "Bof", totalMoney: -10.0),
-            PlayerTotals(id: UUID(), name: "Boe", totalMoney: -10.0),
-            PlayerTotals(id: UUID(), name: "Boo", totalMoney: -10.0),
-            PlayerTotals(id: UUID(), name: "Jimmy", totalMoney: -20.0)
+            PlayerTotals(id: UUID(), name: "Bob", totalMoney: 0),
         ]
     
     var body: some View {

@@ -11,6 +11,10 @@ enum APIEndpoints {
     case login
     case createVerificationCode
     case createAccount
+    case createResetPasswordCode
+    case confirmVerificationCode
+    case updatePassword
+    
     case refresh
     case createGroup
     case getAllGroups
@@ -35,6 +39,13 @@ func getApiUrl(endpoint: APIEndpoints) -> String {
         return "\(API_URL)/create-verification-code"
     case .createAccount:
         return "\(API_URL)/create-account"
+    case .createResetPasswordCode:
+        return "\(API_URL)/create-reset-verification-code"
+    case .confirmVerificationCode:
+        return "\(API_URL)/confirm-verification-code"
+    case .updatePassword:
+        return "\(API_URL)/update-password"
+        
     case .refresh:
         return "\(API_URL)/refresh"
     case .createGroup:

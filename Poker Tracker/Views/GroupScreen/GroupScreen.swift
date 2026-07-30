@@ -42,7 +42,6 @@ struct GroupScreen: View {
                 }
                 group = await vm.getGroupDetails(token: token, group: group)
                 yearOptions = vm.getYearOptions(pokerSessions: group.pokerSessions)
-                print(yearOptions)
                 updatePlayerTotals()
             }
             else {

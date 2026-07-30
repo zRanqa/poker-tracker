@@ -39,13 +39,15 @@ struct LoginSignupForm: View {
     @State private var errorMessage: String = ""
     
     
-    private let lightBackground: Color = Color(red: 0.9, green: 0.9, blue: 0.9)
-    private let darkBackground: Color = Color(red: 0.1, green: 0.1, blue: 0.1)
+    var lightBackground: Color = Color(red: 0.9, green: 0.9, blue: 0.9)
+    var darkBackground: Color = Color(red: 0.1, green: 0.1, blue: 0.1)
     
-    private let lightText: Color = Color(red: 0.7, green: 0.7, blue: 0.7)
-    private let darkText: Color = Color(red: 0.4, green: 0.4, blue: 0.4)
+    var lightText: Color = Color(red: 0.7, green: 0.7, blue: 0.7)
+    var darkText: Color = Color(red: 0.4, green: 0.4, blue: 0.4)
     
     private let vm = LoginSignupFormViewModel()
+    
+    @State private var showResetPasswordPrompt = false
     
     
     func confirmButton() {
@@ -58,25 +60,29 @@ struct LoginSignupForm: View {
             errorMessage = "Please enter a password"
             return
         }
-        guard password.count < 30 else {
-            errorMessage = "Password must be under 30 characters"
-            return
-        }
-        let passwordError = vm.validatePassword(password)
-        if passwordError != "" {
-            errorMessage = passwordError
-            return
-        }
         
         
         errorMessage = ""
         if state == .login {
+            isLoading = true
             Task {
-                isLoading = true
                 errorMessage = await vm.login(email: email, password: password, appState: appState)
+                if errorMessage != "" {
+                    showResetPasswordPrompt = true
+                }
             }
         }
         else {
+            guard password.count < 30 else {
+                errorMessage = "Password must be under 30 characters"
+                return
+            }
+            let passwordError = vm.validatePassword(password)
+            if passwordError != "" {
+                errorMessage = passwordError
+                return
+            }
+            
             guard !name.isEmpty else {
                 errorMessage = "Please enter a name"
                 return
@@ -85,8 +91,8 @@ struct LoginSignupForm: View {
                 errorMessage = "Name must be under 30 characters"
                 return
             }
+            isLoading = true
             Task {
-                isLoading = true
                 errorMessage = await vm.createVerificationCode(email: email)
                 if errorMessage == "" {
                     loginState = .verification
@@ -175,9 +181,29 @@ struct LoginSignupForm: View {
                         .padding(.horizontal, 5)
                 }
                 
-                LoginSignupButton(text: loginSignupButtonLabel, onTap: confirmButton, isLoading: $isLoading)
+                LoginSignupButton(
+                    text: loginSignupButtonLabel,
+                    onTap: confirmButton,
+                    isLoading: $isLoading
+                )
                 
-                
+                if showResetPasswordPrompt {
+                    
+                    HStack(spacing: 4) {
+                        Text("Forgot your password?")
+                            .font(.subheadline)
+                        Button(action: {
+                            loginState = .resetPassword(email)
+                        }) {
+                            Text("Reset Password!")
+                                .font(.subheadline)
+                                .foregroundStyle(Color.orange)
+                        }
+                    }
+                    .opacity(1)
+                    .transition(.opacity)
+                    .animation(.easeInOut(duration: 0.25), value: showResetPasswordPrompt)
+                }
                 HStack(spacing: 4) {
                     Text(accountPrompt)
                         .font(.subheadline)

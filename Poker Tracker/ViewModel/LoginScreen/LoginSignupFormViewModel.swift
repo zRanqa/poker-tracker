@@ -25,7 +25,7 @@ class LoginSignupFormViewModel {
                 }
                 else {
                     if loginDTO?.data != nil {
-                        appState.login(token: loginDTO!.data.access_token, refreshToken: loginDTO!.data.refresh_token)
+                        appState.login(token: loginDTO!.data!.access_token, refreshToken: loginDTO!.data!.refresh_token)
                         return ""
                     }
                     return "Error with data"

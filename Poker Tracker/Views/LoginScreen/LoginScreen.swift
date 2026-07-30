@@ -11,6 +11,7 @@ import SwiftData
 enum LoginState {
     case loginSignup
     case verification
+    case resetPassword(String)
 }
 
 struct LoginScreen: View {
@@ -38,7 +39,8 @@ struct LoginScreen: View {
             .padding(.bottom, 40)
             .bold(true)
             
-            if loginState == .loginSignup {
+            switch loginState {
+            case .loginSignup:
                 LoginSignupForm(
                     onNavigate: onNavigate,
                     loginState: $loginState,
@@ -47,14 +49,19 @@ struct LoginScreen: View {
                     name: $name
                 )
                     .padding(.horizontal, 30)
-            }
-            else {
+            case .verification:
                 VerificationCodeView(
                     onNavigate: onNavigate,
                     loginState: $loginState,
                     email: $email,
                     password: $password,
                     name: $name
+                )
+            case .resetPassword(let email):
+                ResetPasswordView(
+                    onNavigate: onNavigate,
+                    loginState: $loginState,
+                    email: email
                 )
             }
             
