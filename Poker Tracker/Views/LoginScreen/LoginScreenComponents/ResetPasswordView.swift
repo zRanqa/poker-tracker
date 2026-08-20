@@ -54,6 +54,25 @@ struct ResetPasswordView: View {
                 vm: vm
             )
         }
+        HStack {
+            Button(action: {
+                loginState = .loginSignup
+            }) {
+                HStack {
+                    Image(systemName: "arrowshape.backward")
+                    Text("Back to Login")
+                }
+                .padding(10)
+                .background(.ultraThinMaterial)
+                .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+                .overlay {
+                    RoundedRectangle(cornerRadius: 24, style: .continuous).stroke(.white.opacity(0.25), lineWidth: 1)
+                }
+                .shadow(radius: 12)
+            }
+            Spacer()
+        }
+        .padding(.leading, 30)
         
     }
 }

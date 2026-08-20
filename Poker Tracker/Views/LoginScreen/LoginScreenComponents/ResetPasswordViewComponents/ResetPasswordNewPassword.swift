@@ -17,12 +17,6 @@ struct ResetPasswordNewPassword: View {
     @State var errorMessage = ""
     @State var isLoading = false
     
-    var lightBackground: Color = Color(red: 0.9, green: 0.9, blue: 0.9)
-    var darkBackground: Color = Color(red: 0.1, green: 0.1, blue: 0.1)
-    
-    var lightText: Color = Color(red: 0.7, green: 0.7, blue: 0.7)
-    var darkText: Color = Color(red: 0.4, green: 0.4, blue: 0.4)
-    
     @State var newPassword: String = ""
     @State var confirmPassword: String = ""
     
@@ -68,11 +62,11 @@ struct ResetPasswordNewPassword: View {
                 .foregroundStyle(.primary)
                 .frame(maxWidth: .infinity)
                 .padding(15)
-                .background(colorScheme == .light ? lightBackground : darkBackground)
+                .background(Color.textFieldBackground)
                 .cornerRadius(8)
                 .overlay(
                     RoundedRectangle(cornerRadius: 8)
-                        .stroke(colorScheme == .light ? lightText : darkText, lineWidth: 2)
+                        .stroke(Color.textFieldText, lineWidth: 2)
                 )
                 .autocorrectionDisabled(true)
                 .autocapitalization(.none)
@@ -84,11 +78,11 @@ struct ResetPasswordNewPassword: View {
                 .foregroundStyle(.primary)
                 .frame(maxWidth: .infinity)
                 .padding(15)
-                .background(colorScheme == .light ? lightBackground : darkBackground)
+                .background(Color.textFieldBackground)
                 .cornerRadius(8)
                 .overlay(
                     RoundedRectangle(cornerRadius: 8)
-                        .stroke(colorScheme == .light ? lightText : darkText, lineWidth: 2)
+                        .stroke(Color.textFieldText, lineWidth: 2)
                 )
                 .autocorrectionDisabled(true)
                 .autocapitalization(.none)

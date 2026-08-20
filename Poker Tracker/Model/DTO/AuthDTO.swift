@@ -13,5 +13,6 @@ struct RefreshTokens: Codable {
 struct RefreshResponse: Codable {
     let status: String
     let message: String
-    let data: String
+    let token: String?
+    let user: User?
 }

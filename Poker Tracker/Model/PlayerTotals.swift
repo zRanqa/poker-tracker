@@ -74,7 +74,9 @@ func calculateTotals(pokerGroup: PokerGroup, year: Int?) -> [PlayerTotals] {
         playerTotals.append(PlayerTotals(id: groupMember.id, name: groupMember.name, totalMoney: 0))
     }
     
-    for session in pokerGroup.pokerSessions {
+    let newGroupSessions = pokerGroup.pokerSessions.sorted(by: { $0.date > $1.date })
+    
+    for session in newGroupSessions {
         if year == nil || Calendar.current.component(.year, from: session.date) == year {
             for sessionEntry in session.sessionEntries {
                 if let index = playerTotals.firstIndex(where: { $0.id == sessionEntry.groupMember.id }) {
@@ -89,7 +91,7 @@ func calculateTotals(pokerGroup: PokerGroup, year: Int?) -> [PlayerTotals] {
                     playerTotals[index].totalGames += 1
                     
                     // Total wins
-                    if sessionEntry.endAmount >= sessionEntry.startAmount {
+                    if sessionEntry.endAmount > sessionEntry.startAmount {
                         playerTotals[index].totalWins += 1
                     }
                     
@@ -105,16 +107,20 @@ func calculateTotals(pokerGroup: PokerGroup, year: Int?) -> [PlayerTotals] {
                     playerTotals[index].lossPercentage = Double(playerTotals[index].totalLosses) / Double(playerTotals[index].totalGames) * 100
                     
                     // Win Streak
-                    if playerTotals[index].stopWinStreak && (sessionEntry.endAmount > sessionEntry.startAmount) {
-                        playerTotals[index].winStreak += 1
+                    if playerTotals[index].stopWinStreak && (sessionEntry.endAmount >= sessionEntry.startAmount) {
+                        if sessionEntry.endAmount > sessionEntry.startAmount {
+                            playerTotals[index].winStreak += 1
+                        }
                     }
                     else {
                         playerTotals[index].stopWinStreak = false
                     }
                     
                     // Loss Streak
-                    if playerTotals[index].stopLossStreak && (sessionEntry.endAmount < sessionEntry.startAmount) {
-                        playerTotals[index].lossStreak += 1
+                    if playerTotals[index].stopLossStreak && (sessionEntry.endAmount <= sessionEntry.startAmount) {
+                        if sessionEntry.endAmount < sessionEntry.startAmount {
+                            playerTotals[index].lossStreak += 1
+                        }
                     }
                     else {
                         playerTotals[index].stopLossStreak = false
@@ -157,4 +163,26 @@ func calculateTotals(pokerGroup: PokerGroup, year: Int?) -> [PlayerTotals] {
     
     
     return playerTotals
+}
+
+
+func getTestPlayerTotals() -> PlayerTotals {
+    return PlayerTotals(
+        id: UUID(),
+        name: "Name",
+        totalMoney: 1000.0,
+        winStreak: 3,
+        lossStreak: 3,
+        mostMoneyWon: 1000.0,
+        mostMoneyLost: -1000.0,
+        linePoints: [
+            LinePoint(date: Date(), value: 0),
+            LinePoint(date: Date(), value: 10),
+            LinePoint(date: Date(), value: -15),
+            LinePoint(date: Date(), value: -5),
+            LinePoint(date: Date(), value: 20),
+            LinePoint(date: Date(), value: 30)
+        ]
+        
+    )
 }

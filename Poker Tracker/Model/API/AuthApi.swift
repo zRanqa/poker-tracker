@@ -7,9 +7,9 @@
 import Foundation
 
 enum AuthAPI {
-    static func refresh(refreshToken: String) async throws -> String {
+    static func refresh(refreshToken: String) async throws -> RefreshResponse? {
         guard let url = URL(string: getApiUrl(endpoint: .refresh)) else {
-            return ""
+            return nil
         }
         
         var request = URLRequest(url: url)
@@ -21,6 +21,6 @@ enum AuthAPI {
         
         let refreshDTO = try JSONDecoder().decode(RefreshResponse.self, from: data)
 
-        return refreshDTO.data
+        return refreshDTO
     }
 }

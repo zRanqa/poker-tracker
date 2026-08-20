@@ -27,6 +27,10 @@ struct RootView: View {
                     onNavigate: { screen in appState.currentScreen = screen },
                     group: group
                 )
+            case .accountScreen:
+                AccountScreen(
+                    onNavigate: { screen in appState.currentScreen = screen }
+                )
             }
         }
     }

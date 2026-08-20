@@ -30,6 +30,7 @@ struct GroupScreen: View {
     @State private var selectedTab = 0
     
     @State var showGroupSettingsSheet = false
+    @State var selectedPlayerTotals: PlayerTotals? = nil
     
     var vm = GroupScreenViewModel()
     
@@ -108,7 +109,7 @@ struct GroupScreen: View {
                         OverviewTab(onNavigate: onNavigate)
                     }
                     else if selectedTab == GroupTabs.players.rawValue {
-                        PlayersTab(playerTotals: $group.playerTotals)
+                        PlayersTab(playerTotals: $group.playerTotals, selectedPlayerTotals: $selectedPlayerTotals)
                     }
                     else if selectedTab == GroupTabs.sessions.rawValue  {
                         SessionsTab(groupSessions: $group.pokerSessions)
@@ -129,8 +130,17 @@ struct GroupScreen: View {
         .fullScreenCover(isPresented: $showGroupSettingsSheet) {
             GroupSettingsView(group: $group, loadGroup: loadGroup)
         }
+        
         .onChange(of: selectedYear) {
             updatePlayerTotals()
+        }
+        .sheet(item: $selectedPlayerTotals) { playerTotals in
+            IndividualPlayerBreakdownView(
+                playerTotals: playerTotals,
+                groupMember: group.groupMembers.first{ $0.id == playerTotals.id } ??
+                            GroupMember(id: playerTotals.id, name: "Error")
+            )
+            .presentationDragIndicator(.visible)
         }
     }
 }

@@ -34,8 +34,8 @@ struct BottomBarView: View {
                 
                 Spacer()
                 Button(action: {
-                    appState.logout()
-                    onNavigate(.loginScreen)
+                    appState.groupId = nil
+                    onNavigate(.accountScreen)
                 }) {
                     Image(systemName: "person.circle")
                         .font(.system(size: iconSize))

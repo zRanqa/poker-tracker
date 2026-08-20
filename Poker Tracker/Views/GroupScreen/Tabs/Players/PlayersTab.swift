@@ -14,6 +14,7 @@ struct PlayersTab: View {
     @State var sortedPlayerTotals: [PlayerTotals] = []
     
     @State var selectedFilter: String = "Win Percentage"
+    @Binding var selectedPlayerTotals: PlayerTotals?
     
     var body: some View {
         VStack {
@@ -27,7 +28,8 @@ struct PlayersTab: View {
                     ForEach(sortedPlayerTotals, id: \.id) { playerTotal in
                         PlayerValueDisplay(
                             selectedFilter: $selectedFilter,
-                            playerTotals: playerTotal
+                            playerTotals: playerTotal,
+                            selectedPlayerTotals: $selectedPlayerTotals
                         )
                         
                         Divider()
@@ -62,8 +64,9 @@ struct PlayersTab: View {
 
 struct PlayersTabPreview: View {
     @State var playerTotals: [PlayerTotals] = []
+    @State var selectedPlayerTotals: PlayerTotals? = nil
     var body: some View {
-        PlayersTab(playerTotals: $playerTotals)
+        PlayersTab(playerTotals: $playerTotals, selectedPlayerTotals: $selectedPlayerTotals)
     }
 }
 

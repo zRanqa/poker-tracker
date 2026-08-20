@@ -23,7 +23,7 @@ struct LoginScreen: View {
     var onNavigate: (AppScreen) -> Void
     
     @State var email: String = "jonnoach@gmail.com"
-    @State var password: String = "securePassword1"
+    @State var password: String = "securePassword1!"
     @State var name: String = ""
     
     

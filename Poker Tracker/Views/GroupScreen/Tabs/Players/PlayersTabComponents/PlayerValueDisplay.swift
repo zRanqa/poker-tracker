@@ -10,10 +10,12 @@ import SwiftUI
 struct PlayerValueDisplay: View {
     @Binding var selectedFilter: String
     var playerTotals: PlayerTotals
+    
+    @Binding var selectedPlayerTotals: PlayerTotals?
 
     var body: some View {
         Button(action: {
-            
+            selectedPlayerTotals = playerTotals
         }) {
             HStack {
                 Text(playerTotals.name)
@@ -41,9 +43,10 @@ struct PlayerValueDisplay: View {
 struct PlayerValueDisplayPreview: View {
     
     @State var selectedFilter: String = "Total Money"
+    @State var selectedPlayerTotals: PlayerTotals? = nil
     
     var body: some View {
-        PlayerValueDisplay(selectedFilter: $selectedFilter,playerTotals: PlayerTotals(id: UUID(), name: "bob", totalMoney: 20.0))
+        PlayerValueDisplay(selectedFilter: $selectedFilter,playerTotals: PlayerTotals(id: UUID(), name: "bob", totalMoney: 20.0), selectedPlayerTotals: $selectedPlayerTotals)
     }
 }
 

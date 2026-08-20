@@ -13,6 +13,7 @@ enum AppScreen {
     case loginScreen
     case homeScreen
     case groupScreen(PokerGroup)
+    case accountScreen
 }
 
 @main

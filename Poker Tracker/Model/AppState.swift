@@ -9,6 +9,13 @@
 import Foundation
 import JWTDecode
 
+
+enum AuthError: Error {
+    case noRefreshToken
+    case invalidRefreshResponse
+}
+
+
 @MainActor
 class AppState: ObservableObject {
     @Published var currentScreen: AppScreen = .loginScreen
@@ -16,6 +23,7 @@ class AppState: ObservableObject {
     @Published var refreshToken: String? = nil
     @Published var groupId: Int? = nil
     @Published var userId: UUID? = nil
+    @Published var currUser: User? = nil
     
     // Tracks the refresh request to stop sending multiple requests
     private var refreshTask: Task<String, Error>? = nil
@@ -52,7 +60,8 @@ class AppState: ObservableObject {
         }
     }
 
-    func login(token: String, refreshToken: String) {
+    func login(user: User, token: String, refreshToken: String) {
+        self.currUser = user
         self.accessToken = token
         self.refreshToken = refreshToken
         
@@ -68,6 +77,7 @@ class AppState: ObservableObject {
         self.refreshToken = nil
         self.refreshTask = nil
         self.userId = nil
+        self.currUser = nil
         
         try? KeychainManager.delete(forKey: TokenKey.accessToken)
         try? KeychainManager.delete(forKey: TokenKey.refreshToken)
@@ -96,10 +106,14 @@ class AppState: ObservableObject {
             }
 
             do {
-                let newAccessToken = try await AuthAPI.refresh(refreshToken: refreshToken)
-                self.accessToken = newAccessToken
-                try? KeychainManager.save(newAccessToken, forKey: TokenKey.accessToken)
-                return newAccessToken
+                let refreshResponse = try await AuthAPI.refresh(refreshToken: refreshToken)
+                guard let token = refreshResponse?.token, let user = refreshResponse?.user else {
+                    throw AuthError.invalidRefreshResponse
+                }
+                self.accessToken = token
+                self.currUser = user
+                try? KeychainManager.save(refreshResponse!.token!, forKey: TokenKey.accessToken)
+                return self.accessToken!
             } catch {
                 logout()
                 throw error
@@ -118,9 +132,4 @@ class AppState: ObservableObject {
         }
         return jwt.expired // handles exp claim comparison for you
     }
-}
-
-
-enum AuthError: Error {
-    case noRefreshToken
 }
